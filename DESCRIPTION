@@ -1,0 +1,21 @@
+Package: GeneScan3DKnock
+Type: Package
+Title: A Unified Framework for Gene-Based Testing with Joint Analysis of Coding and Regulatory Variation, and Integration of Knockoff Statistics for Causal Gene Identification
+Version: 0.1
+Author: Shiyang Ma, Zihuai He, James Dalgleish
+Maintainer: Shiyang Ma <sm4857@cumc.columbia.edu>
+Description: Functions for the gene-based association tests that integrate both common and rare genetic variation from putative regulatory elements, including promoters and enhancers for each gene, along with the knockoff-enhanced tests.
+License: GPL-3
+Depends: R(>= 3.5.0)
+Imports:
+    SKAT,
+    Matrix, 
+    MASS, 
+    WGScan, 
+    SPAtest, 
+    CompQuadForm,
+    KnockoffScreen
+NeedsCompilation: no
+Repository: CRAN
+Encoding: UTF-8
+RoxygenNote: 7.1.1
