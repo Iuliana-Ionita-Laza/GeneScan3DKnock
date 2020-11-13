@@ -19,7 +19,7 @@ library(devtools)
 devtools::install_github("Iuliana-Ionita-Laza/GeneScan3DKnock")
 
 ## Usage
-Please see the GeneScan3DKnock user manual for detailed usage of GeneScan3DKnock package.
+Please see the GeneScan3DKnock user manual for detailed usage of GeneScan3DKnock package. https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_0.1.pdf
 
 ## Version
 The current version is 0.1 (November 13, 2020).
