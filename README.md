@@ -11,7 +11,8 @@ R (recommended version >= 3.5.0)
 GeneScan3DKnock imports R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm and KnockoffScreen. Make sure to install those packages before using GeneScan3DKnock.
 
 ## Installation
-library(devtools)
+library(devtools) 
+
 devtools::install_github("Iuliana-Ionita-Laza/GeneScan3DKnock")
 
 ## Usage
