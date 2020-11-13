@@ -21,5 +21,10 @@ Please see the GeneScan3DKnock user manual for detailed usage of GeneScan3DKnock
 ## Version
 The current version is 0.1 (November 12, 2020).
 
+## Citation
+
+Shiyang Ma, James Dalgleish, Justin Lee, Chen Wang, Richard Gill, Edwin K. Silverman, Michael Cho, Zihuai He, Iuliana Ionita-Laza (2020+) "GeneScan3DKnock: A unified framework for
+gene-based testing with joint analysis of coding and regulatory variation, and integration of knockoff statistics for causal gene identification". 
+
 ## License
 This software is licensed under GPLv3.
