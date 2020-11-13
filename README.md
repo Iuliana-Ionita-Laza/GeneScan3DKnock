@@ -11,7 +11,7 @@ GeneScan3DKnock is an R package for performing the gene-based testing with joint
 R (recommended version >= 3.5.0)
 
 ## Dependencies
-GeneScan3DKnock imports R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm and KnockoffScreen. Make sure to install those packages before using GeneScan3DKnock.
+GeneScan3DKnock imports R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm and KnockoffScreen. Make sure to install those packages before installing GeneScan3DKnock.
 
 ## Installation
 library(devtools) 
