@@ -26,8 +26,7 @@ The current version is 0.1 (November 13, 2020).
 
 ## Citation
 
-Shiyang Ma, James Dalgleish, Justin Lee, Chen Wang, Richard Gill, Edwin K. Silverman, Michael Cho, Zihuai He, Iuliana Ionita-Laza (2020+) "GeneScan3DKnock: A unified framework for
-gene-based testing with joint analysis of coding and regulatory variation, and integration of knockoff statistics for causal gene identification". 
+Shiyang Ma, James Dalgleish, Justin Lee, Chen Wang, Linxi Liu, Richard Gill, Wendy Chung, Hugues Aschard, Edwin K. Silverman, Michael H. Cho, Zihuai He, Iuliana Ionita-Laza, "A unified knockoff framework for gene-based testing with joint analysis of coding and regulatory variation", 2020
 
 ## License
 This software is licensed under GPLv3.
