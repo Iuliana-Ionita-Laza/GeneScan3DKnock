@@ -2,7 +2,7 @@
 (A unified framework for gene-based testing with joint analysis of coding and regulatory variation, and integration of knockoff statistics for causal gene identification)
 
 ## Description
-GeneScan3DKnock is an R package for performing the gene-based testing with joint analysis of coding and regulatory variation, i.e., promoter and putative enhancers. Functions for the gene-based association tests that integrate both common and rare genetic variation from putative regulatory elements for each gene, along with the knockoff-enhanced tests.
+Functions for the gene-based association tests that integrate both common and rare genetic variation from proximal and distal regulatory elements, including promoter and enhancers for each gene, along with the knockoff-enhanced tests. The GeneScan3DKnock has two steps: Step 1. Knockoff generation using AR_KnockoffGeneration() function and Step 2. Knockoff filter using GeneScan3DKnock().
 
 ## Workflow
 ![Workflow](https://user-images.githubusercontent.com/57265092/99107266-8c690a80-25b3-11eb-8fe1-ceb388bffa38.jpg)
