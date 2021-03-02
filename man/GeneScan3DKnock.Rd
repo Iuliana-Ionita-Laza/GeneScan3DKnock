@@ -2,38 +2,38 @@
 % Please edit documentation in R/GeneScan3D.R
 \name{GeneScan3DKnock}
 \alias{GeneScan3DKnock}
-\title{Integration of knockoff statistics for causal gene identification}
+\title{GeneScan3DKnock: Knockoff-enhanced gene-based test for causal gene discovery (knockoff filter).}
 \usage{
 GeneScan3DKnock(
   M = 5,
-  p0 = GeneScan3DKnock.example$Cauchy3D.all.original,
-  p_ko = cbind(GeneScan3DKnock.example$Cauchy3D.all.ko1,
-    GeneScan3DKnock.example$Cauchy3D.all.ko2, GeneScan3DKnock.example$Cauchy3D.all.ko3,
-    GeneScan3DKnock.example$Cauchy3D.all.ko4, GeneScan3DKnock.example$Cauchy3D.all.ko5),
+  p0 = GeneScan3DKnock.example$GeneScan3D.original,
+  p_ko = cbind(GeneScan3DKnock.example$GeneScan3D.ko1,
+    GeneScan3DKnock.example$GeneScan3D.ko2, GeneScan3DKnock.example$GeneScan3D.ko3,
+    GeneScan3DKnock.example$GeneScan3D.ko4, GeneScan3DKnock.example$GeneScan3D.ko5),
   fdr = 0.1,
   gene_id = GeneScan3DKnock.example$gene.id
 )
 }
 \arguments{
-\item{M}{Number of multiple knockoffs. We use M=5 in our analysis.}
+\item{M}{Number of multiple knockoffs.}
 
-\item{p0}{A N-dimensional vector of the original p-values for N genes considered in the analysis. The p-values can be obtained in GeneScan3D() function or other analysis.}
+\item{p0}{A N-dimensional vector of the original GeneScan3D p-values, calculated using AR_KnockoffGeneration() function.}
 
-\item{p_ko}{A N*M matrix of M knockoff p-values for N genes considered in the analysis. The knockoff p-values can be obtained in R package 'KnockoffScreen'.}
+\item{p_ko}{A N*M matrix of M knockoff GeneScan3D p-values, calculated using AR_KnockoffGeneration() function.}
 
 \item{fdr}{The false discovery rate (FDR) threshold. The default is 0.1.}
 
-\item{gene_id}{The genes id for N genes considered in the analysis, which can also be the windows id or an indicator vector from 1 to N.}
+\item{gene_id}{The genes id for N genes considered in the analysis. Usually we consider N=~20,000 protein-coding genes.}
 }
 \value{
-\item{W}{The knockoff statistics for N genes.}
+\item{W}{The knockoff statistics for each gene.}
 
-\item{Qvalue}{The Q-values for N genes.}
+\item{Qvalue}{The q-values for each gene.}
 
-\item{gene_sign}{Significant genes obtained in the knockoff test with Q-values less then the fdr threshold.}
+\item{gene_sign}{Significant genes with q-values less then the fdr threshold.}
 }
 \description{
-This function calculates the knockoff statistics and q-values after proving the original and knockoff p-values for each gene (or window).
+This function performs the knockoff filter, and computes the q-value for each gene. This function takes the results from the AR_KnockoffGeneration() function and get knockoff statistics and q-values.
 }
 \examples{
 library(GeneScan3DKnock)
@@ -41,14 +41,16 @@ library(GeneScan3DKnock)
 # Load data example
 data("GeneScan3DKnock.example")
 
-result.GeneScan3DKnock=GeneScan3DKnock(M=5,p0=GeneScan3DKnock.example$Cauchy3D.all.original,
-p_ko=cbind(GeneScan3DKnock.example$Cauchy3D.all.ko1,GeneScan3DKnock.example$Cauchy3D.all.ko2,
-GeneScan3DKnock.example$Cauchy3D.all.ko3,GeneScan3DKnock.example$Cauchy3D.all.ko4,
-GeneScan3DKnock.example$Cauchy3D.all.ko5),fdr = 0.1,gene_id=GeneScan3DKnock.example$gene.id)
-
-#Obtain knockoff statistics, q-values and the significant genes.
-W=result.GeneScan3DKnock$W
-Qvalue=result.GeneScan3DKnock$Qvalue
-gene_sign=result.GeneScan3DKnock$gene_sign
+result.GeneScan3DKnock=GeneScan3DKnock(M=5,
+p0=GeneScan3DKnock.example$GeneScan3D.original,
+p_ko=cbind(GeneScan3DKnock.example$GeneScan3D.ko1,
+          GeneScan3DKnock.example$GeneScan3D.ko2,
+          GeneScan3DKnock.example$GeneScan3D.ko3,
+          GeneScan3DKnock.example$GeneScan3D.ko4,
+          GeneScan3DKnock.example$GeneScan3D.ko5),fdr = 0.1,
+          gene_id=GeneScan3DKnock.example$gene.id)
+result.GeneScan3DKnock$W
+result.GeneScan3DKnock$Qvalue
+result.GeneScan3DKnock$gene_sign
 
 }

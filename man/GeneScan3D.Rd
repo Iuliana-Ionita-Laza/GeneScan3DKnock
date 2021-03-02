@@ -2,96 +2,108 @@
 % Please edit documentation in R/GeneScan3D.R
 \name{GeneScan3D}
 \alias{GeneScan3D}
-\title{Conduct gene-based scan test on the gene buffer region, adding one promoter and R enhancers.}
+\title{Conduct GeneScan3D analysis on the gene buffer region, integrating promoter and R enhancers.}
 \usage{
 GeneScan3D(
   G = G_gene_buffer,
   Z = Z_gene_buffer,
   G.promoter = G_promoter,
   Z.promoter = Z_promoter,
-  G.EnhancerAll = cbind(G_Enhancer1, G_Enhancer2),
-  Z.EnhancerAll = rbind(Z_Enhancer1, Z_Enhancer2),
-  R = 2,
-  p_Enhancer = c(dim(G_Enhancer1)[2], dim(G_Enhancer2)[2]),
+  G.EnhancerAll = G_EnhancerAll,
+  Z.EnhancerAll = Z.EnhancerAll,
+  R = length(p_EnhancerAll),
+  p_Enhancer = p_EnhancerAll,
   window.size = c(1000, 5000, 10000),
   pos = pos_gene_buffer,
-  pos_promoter = pos_promoter,
   MAC.threshold = 5,
-  MAF.threshold = 1/sqrt(2 * n),
+  MAF.threshold = 0.01,
   Gsub.id = NULL,
-  impute.method = "fixed",
-  result.prelim = result.prelim
+  result.null.model = result.null.model
 )
 }
 \arguments{
-\item{G}{The genotype matrix in the gene buffer region, which is a n*p matrix where n is the number of subjects and p is the number of genetic variants in the gene buffer region.}
+\item{G}{The genotype matrix in the gene buffer region, which is a n*p matrix where n is the number of individuals and p is the number of genetic variants in the gene buffer region.}
 
-\item{Z}{A p*q genonet matrix matrix where p is the number of genetic variables and q is the number of functional scores (weights). The default is NULL, which uses the beta(MAF; 1,25) weight.}
+\item{Z}{A p*q functional annotation matrix, where p is the number of genetic variants in the gene buffer region and q is the number of functional annotations. If Z is NULL (do not incorporate any functional annotations), the minor allele frequency weighted dispersion and/or burden tests are applied. Specifically, Beta(MAF; 1; 25) weights are used for rare variants and weights one are used for common variants.}
 
-\item{G.promoter}{The genotype matrix for promoter region.}
+\item{G.promoter}{The genotype matrix for promoter, which can be NULL, that is, do not integrate promoter.}
 
-\item{Z.promoter}{The genonet matrix for promoter region.}
+\item{Z.promoter}{The functional annotation matrix for promoter. Z.promoter can be NULL.}
 
-\item{G.EnhancerAll}{The genotype matrix for R enhancers, combined together by columns.}
+\item{G.EnhancerAll}{The genotype matrix for R enhancers, by combining the genotype matrix of each enhancer by columns.}
 
-\item{Z.EnhancerAll}{The genonet matrix for R enhancers, combined together by rows.}
+\item{Z.EnhancerAll}{The functional annotation matrix for R enhancers, by combining the functional annotation matrix of each enhancer by rows. Z.EnhancerAll can be NULL.}
 
 \item{R}{Number of enhancers.}
 
 \item{p_Enhancer}{Number of variants in R enhancers, which is a 1*R vector.}
 
-\item{window.size}{The 1-D window sizes in base pairs to scan the gene buffer region. The default is c(1000,5000,10000).}
+\item{window.size}{The 1-D window sizes in base pairs to scan the gene buffer region. The recommended window sizes are c(1000,5000,10000).}
 
-\item{pos}{The positions of genetic variants in the gene buffer region, an p dimensional vector. Each position corresponds to a column in the genotype matrix G.}
+\item{pos}{The positions of genetic variants in the gene buffer region, an p dimensional vector. Each position corresponds to a column in the genotype matrix G and a row in the functional annotation matrix Z.}
 
-\item{pos_promoter}{The positions of genetic variants in the promoter region. Each position corresponds to a column in the genotype matrix G.promoter.}
+\item{MAC.threshold}{Threshold for minor allele count. Variants below MAC.threshold are ultra-rare variants. The recommended level is 5.}
 
-\item{MAC.threshold}{Threshold for minor allele count. Variants below MAC.threshold are ultra-rare variants. The default is 5.}
-
-\item{MAF.threshold}{Threshold for minor allele frequency. Variants below MAF.threshold are rare variants. The default is 1/sqrt(2*n).}
+\item{MAF.threshold}{Threshold for minor allele frequency. Variants below MAF.threshold are rare variants. The recommended level is 0.01.}
 
 \item{Gsub.id}{The subject id corresponding to the genotype matrix, an n dimensional vector. The default is NULL, where the matched phenotype and genotype matrices are assumed.}
 
-\item{impute.method}{Imputation method when there is missing genotype. Can be "random", "fixed" or "bestguess".}
-
-\item{result.prelim}{The output of function "GeneScan.prelim()".}
+\item{result.null.model}{The output of function "GeneScan.Null.Model()".}
 }
 \value{
-\item{GeneScan3D.Cauchy.pvalue}{Cauchy combined p-values under all, common and rare variants for GeneScan3D analysis.}
+\item{GeneScan3D.Cauchy.pvalue}{Cauchy combination p-values of all, common and rare variants for GeneScan3D analysis.}
 
 \item{M}{Number of 1D scanning windows.}
 
-\item{minp}{Minimum p-values under all, common and rare variants for 3D windows.}
+\item{minp}{Minimum p-values of all, common and rare variants for 3D windows.}
 
-\item{RE_minp}{The regulartory elements in the 3D windows corresponding to the minimum p-values, under all, common and rare variants. 0 represents promoter and a number from 1 to R represents promoter plus r-th enhancer.}
+\item{RE_minp}{The regulartory elements in the 3D windows corresponding to the minimum p-values, for all, common and rare variants. 0 represents promoter and a number from 1 to R represents promoter and r-th enhancer.}
 }
 \description{
-This function conduct gene-based scan test on the gene buffer region, incorporating the regulatory elements, i.e., one promoter and R enhancers.
+This function conducts gene-based scan test on the gene buffer region, integrating proximal and distal regulatory elements for a gene, i.e., promoter and R enhancers.
 }
 \examples{
 library(GeneScan3DKnock)
 
 # Load data example
+# Y: outcomes, n by 1 matrix for n=2000 individuals
+# X: covariates, n by d matrix for d=1 covariate
+# G_gene_buffer: genotype matrix of gene buffer region, n by p matrix, p=287 variants
+# pos_gene_buffer: positions of p=287 genetic variants
+# Z_gene_buffer: p by q functional annotation matrix, q=1 functional annotation
+# G_promoter: 2000 by 6 genotype matrix of promoter
+# Z_promoter: 6 by 1 functional annotation matrix of promoter
+# G_EnhancerAll: 2000 by 86 genotype matrix of R=2 enhancers; 
+# Z_EnhancerAll: 86 by 1 functional annotation matrix of R=2 enhancers
+# p_EnhancerAll: Number of variants for R=2 enhancers.
 
 data("GeneScan3D.example")
-Y=GeneScan3D.example$Y; X=GeneScan3D.example$X;
-G_gene_buffer=GeneScan3D.example$G_gene_buffer; G_promoter=GeneScan3D.example$G_promoter;
-G_Enhancer1=GeneScan3D.example$G_Enhancer1; G_Enhancer2=GeneScan3D.example$G_Enhancer2;
-Z_gene_buffer=GeneScan3D.example$Z_gene_buffer; Z_promoter=GeneScan3D.example$Z_promoter;
-Z_Enhancer1=GeneScan3D.example$Z_Enhancer1; Z_Enhancer2=GeneScan3D.example$Z_Enhancer2;
-pos_gene_buffer=GeneScan3D.example$pos_gene_buffer;
-pos_promoter=GeneScan3D.example$pos_promoter;
-n=length(Y)
+
+Y=GeneScan3D.example$Y; X=GeneScan3D.example$X; n=length(Y)
+
+G_gene_buffer=GeneScan3D.example$G_gene_buffer
+G_promoter=GeneScan3D.example$G_promoter
+G_EnhancerAll=cbind(GeneScan3D.example$G_Enhancer1,GeneScan3D.example$G_Enhancer2)
+
+Z_gene_buffer=GeneScan3D.example$Z_gene_buffer
+Z_promoter=GeneScan3D.example$Z_promoter
+Z_EnhancerAll=rbind(GeneScan3D.example$Z_Enhancer1,GeneScan3D.example$Z_Enhancer2)
+
+pos_gene_buffer=GeneScan3D.example$pos_gene_buffer
+p_EnhancerAll=c(dim(GeneScan3D.example$G_Enhancer1)[2],dim(GeneScan3D.example$G_Enhancer2)[2])
 
 # Preliminary data management
-result.prelim=GeneScan.prelim(Y, X, out_type="C", B=1000)
+set.seed(12345)
+result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
 
-# Conduct 3D gene-based scan test on the gene buffer region, adding one promoter and R enhancers
+# Conduct GeneScan3D analysis
 result.GeneScan3D=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,
-G.promoter=G_promoter, Z.promoter=Z_promoter,
-G.EnhancerAll=cbind(G_Enhancer1,G_Enhancer2),Z.EnhancerAll=rbind(Z_Enhancer1,Z_Enhancer2),
-R=2,p_Enhancer=c(dim(G_Enhancer1)[2],dim(G_Enhancer2)[2]),window.size=c(1000,5000,10000),
-pos=pos_gene_buffer,pos_promoter=pos_promoter,MAC.threshold=5,MAF.threshold=1/sqrt(2*n),
-Gsub.id=NULL,impute.method='fixed',result.prelim=result.prelim)
+                            G.promoter=G_promoter,Z.promoter=Z_promoter,
+                            G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, 
+                            R=2,p_Enhancer=p_EnhancerAll,
+                            pos=pos_gene_buffer,
+                            window.size=c(1000,5000,10000),MAC.threshold=5,MAF.threshold=0.01,
+                            result.null.model=result.null.model)
+result.GeneScan3D$GeneScan3D.Cauchy.pvalue
 
 }

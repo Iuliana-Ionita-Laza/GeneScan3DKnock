@@ -2,7 +2,7 @@
 % Please edit documentation in R/GeneScan3D.R
 \name{GeneScan1D}
 \alias{GeneScan1D}
-\title{Conduct gene-based scan test on the gene buffer region.}
+\title{Conduct GeneScan1D analysis on the gene buffer region.}
 \usage{
 GeneScan1D(
   G = G_gene_buffer,
@@ -10,62 +10,60 @@ GeneScan1D(
   window.size = c(1000, 5000, 10000),
   pos = pos_gene_buffer,
   MAC.threshold = 5,
-  MAF.threshold = 1/sqrt(2 * n),
+  MAF.threshold = 0.01,
   Gsub.id = NULL,
-  impute.method = "fixed",
-  result.prelim = result.prelim
+  result.null.model = result.null.model
 )
 }
 \arguments{
-\item{G}{The genotype matrix in the gene buffer region, which is a n*p matrix where n is the number of subjects and p is the number of genetic variants in the gene buffer region.}
+\item{G}{The genotype matrix in the gene buffer region, which is a n*p matrix where n is the number of individuals and p is the number of genetic variants in the gene buffer region.}
 
-\item{Z}{A p*q genonet matrix matrix where p is the number of genetic variables and q is the number of functional scores (weights). The default is NULL, which uses the beta(MAF; 1,25) weight.}
+\item{Z}{A p*q functional annotation matrix where p is the number of genetic variants in the gene buffer region and q is the number of functional annotations. If Z is NULL (do not incorporate any functional annotations), the minor allele frequency weighted dispersion and/or burden tests are applied. Specifically, Beta(MAF; 1; 25) weights are used for rare variants and weights one are used for common variants.}
 
-\item{window.size}{The 1-D window sizes in base pairs to scan the gene buffer region. The default is c(1000,5000,10000).}
+\item{window.size}{The 1-D window sizes in base pairs to scan the gene buffer region. The recommended window sizes are c(1000,5000,10000).}
 
-\item{pos}{The positions of genetic variants in the gene buffer region, an p dimensional vector. Each position corresponds to a column in the genotype matrix.}
+\item{pos}{The positions of genetic variants in the gene buffer region, an p dimensional vector. Each position corresponds to a column in the genotype matrix and a row in the functional annotation matrix.}
 
-\item{MAC.threshold}{Threshold for minor allele count. Variants below MAC.threshold are ultra-rare variants. The default is 5.}
+\item{MAC.threshold}{Threshold for minor allele count. Variants below MAC.threshold are ultra-rare variants. The recommended level is 5.}
 
-\item{MAF.threshold}{Threshold for minor allele frequency. Variants below MAF.threshold are rare variants. The default is 1/sqrt(2*n).}
+\item{MAF.threshold}{Threshold for minor allele frequency. Variants below MAF.threshold are rare variants. The recommended level is 0.01.}
 
 \item{Gsub.id}{The subject id corresponding to the genotype matrix, an n dimensional vector. The default is NULL, where the matched phenotype and genotype matrices are assumed.}
 
-\item{impute.method}{Imputation method when there is missing genotype. Can be "random", "fixed" or "bestguess".}
-
-\item{result.prelim}{The output of function "GeneScan.prelim()".}
+\item{result.null.model}{The output of function "GeneScan.Null.Model()".}
 }
 \value{
-\item{GeneScan1D.Cauchy.pvalue}{Cauchy combined p-values under all, common and rare variants for GeneScan1D analysis.}
+\item{GeneScan1D.Cauchy.pvalue}{Cauchy combination p-values of all, common and rare variants for GeneScan1D analysis.}
 
 \item{M}{Number of 1D scanning windows.}
 }
 \description{
-This function conduct gene-based scan test on the gene buffer region using 1D windows under different sizes, do not incorporate any regulatory elements.
+This function conducts gene-based scan test on the gene buffer region using 1D windows with sizes 1-5-10 Kb.
 }
 \examples{
 library(GeneScan3DKnock)
 
 # Load data example
-# Y: outcomes, n by 1 matrix where n is the total number of observations
-# X: covariates, n by d matrix
-# G_gene_buffer: genotype matrix of gene buffer region, n by p matrix
-# pos_gene_buffer: positions of genetic variants, p dimentional vector
-# Z_gene_buffer: functional annotation matrix, p by q matrix
+# Y: outcomes, n by 1 matrix for n=2000 individuals
+# X: covariates, n by d matrix for d=1 covariate
+# G_gene_buffer: genotype matrix of gene buffer region, n by p matrix, p=287 variants
+# pos_gene_buffer: positions of p=287 genetic variants
+# Z_gene_buffer: p by q functional annotation matrix, q=1 functional annotation
 
 data("GeneScan3D.example")
 Y=GeneScan3D.example$Y; X=GeneScan3D.example$X;
 G_gene_buffer=GeneScan3D.example$G_gene_buffer;
 Z_gene_buffer=GeneScan3D.example$Z_gene_buffer;
 pos_gene_buffer=GeneScan3D.example$pos_gene_buffer;
-n=length(Y)
 
 # Preliminary data management
-result.prelim=GeneScan.prelim(Y, X, out_type="C", B=1000)
+set.seed(12345)
+result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
 
-# Scan the gene buffer region using 1kb, 5kb and 10kb 1-D windows
-result.GeneScan1D=GeneScan1D(G=G_gene_buffer,Z=Z_gene_buffer,window.size=c(1000,5000,10000),
-pos=pos_gene_buffer,MAC.threshold=5,MAF.threshold=1/sqrt(2*n),
-Gsub.id=NULL, impute.method='fixed',result.prelim=result.prelim)
+#Conduct GeneScan1D analysis
+result.GeneScan1D=GeneScan1D(G=G_gene_buffer,Z=Z_gene_buffer,pos=pos_gene_buffer,
+                            window.size=c(1000,5000,10000),MAC.threshold=5,MAF.threshold=0.01,
+                            result.null.model=result.null.model)
+result.GeneScan1D$GeneScan1D.Cauchy.pvalue 
 
 }
