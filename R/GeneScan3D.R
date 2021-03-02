@@ -78,7 +78,7 @@ utils::globalVariables(c('G_Enhancer1_surround','G_Enhancer2_surround','variants
 
 #'Data example for GeneScan3DKnock.
 #'
-#'This example dataset contains the original and M=5 knockoff p-values for N=100 genes. Each row presents gene id, original GeneScan3D p-value and M knockoff GeneScan3D p-values. The original and knockoff GeneScan3D p-values are generated using AR_KnockoffGeneration() function. 
+#'This example dataset contains the original and M=5 knockoff p-values for N=100 genes. Each row presents gene id, original GeneScan3D p-value and M knockoff GeneScan3D p-values. The original and knockoff GeneScan3D p-values are generated using GeneScan3D.KnockoffGeneration() function. 
 #'
 #'This example dataset can be used to calculate the knockoff statistics and q-values for GeneScan3DKnock() function. 
 #'
@@ -98,7 +98,7 @@ utils::globalVariables(c('G_Enhancer1_surround','G_Enhancer2_surround','variants
 #' @param id The subject id. This is used to match phenotype with genotype. The default is NULL, where the matched phenotype and genotype matrices are assumed.
 #' @param out_type Type of outcome variable. Can be either "C" for continuous or "D" for dichotomous. The default is "C".
 #' @param B Number of resampling replicates. The default is 1000. A larger value leads to more accurate and stable p-value calculation, but requires more computing time.
-#' @return It returns a list used for function GeneScan1D(), GeneScan3D() and AR_KnockoffGeneration().
+#' @return It returns a list used for function GeneScan1D(), GeneScan3D() and GeneScan3D.KnockoffGeneration().
 #' @examples
 #' library(GeneScan3DKnock)
 #'
@@ -805,7 +805,7 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
 
 
 
-#' AR Knockoff Generation: an auto-regressive model for knockoff generation. 
+#' GeneScan3D AR Knockoff Generation: an auto-regressive model for knockoff generation. 
 #'
 #' This function conducts an auto-regressive model by generating the multiple knockoffs data and computes the p-values. This function generates the knockoffs for the gene and regulatory elements using surrounding regions, then compute original and knockoff GeneScan3D p-values. The recommended size of surrounding regions is 200 Kb.
 #'
@@ -864,7 +864,7 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
 #'set.seed(12345)
 #'result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
 #'
-#'result.AR_KnockoffGeneration=AR_KnockoffGeneration(G_gene_buffer_surround=G_gene_buffer_surround,
+#'result.GeneScan3D.KnockoffGeneration=GeneScan3D.KnockoffGeneration(G_gene_buffer_surround=G_gene_buffer_surround,
 #'variants_gene_buffer_surround=variants_gene_buffer_surround,
 #'gene_buffer.pos=gene_buffer.pos,promoter.pos=promoter.pos,R=R, 
 #'G_EnhancerAll_surround=G_EnhancerAll_surround, 
@@ -874,8 +874,8 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
 #'Z=Z_gene_buffer,Z.promoter=Z_promoter,Z.EnhancerAll=Z_EnhancerAll, 
 #'window.size=c(1000,5000,10000),
 #'MAC.threshold=5,MAF.threshold=0.01,Gsub.id=NULL,result.null.model=result.null.model,M=5)
-#'result.AR_KnockoffGeneration$GeneScan3D.Cauchy 
-#'result.AR_KnockoffGeneration$GeneScan3D.Cauchy_knockoff
+#'result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy 
+#'result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy_knockoff
 #' @import SKAT
 #' @import Matrix
 #' @import WGScan
@@ -884,7 +884,7 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
 #' @import abind
 #' @import KnockoffScreen
 #' @export
-AR_KnockoffGeneration<-function(G_gene_buffer_surround=G_gene_buffer_surround,
+GeneScan3D.KnockoffGeneration<-function(G_gene_buffer_surround=G_gene_buffer_surround,
                                 variants_gene_buffer_surround=variants_gene_buffer_surround,
                                 gene_buffer.pos=gene_buffer.pos,promoter.pos=promoter.pos,R=R, 
                                 G_EnhancerAll_surround=G_EnhancerAll_surround, 
@@ -1055,11 +1055,11 @@ AR_KnockoffGeneration<-function(G_gene_buffer_surround=G_gene_buffer_surround,
 
 #' GeneScan3DKnock: Knockoff-enhanced gene-based test for causal gene discovery (knockoff filter).
 #'
-#' This function performs the knockoff filter, and computes the q-value for each gene. This function takes the results from the AR_KnockoffGeneration() function and get knockoff statistics and q-values.
+#' This function performs the knockoff filter, and computes the q-value for each gene. This function takes the results from the GeneScan3D.KnockoffGeneration() function and get knockoff statistics and q-values.
 #'
 #' @param M Number of multiple knockoffs. 
-#' @param p0 A N-dimensional vector of the original GeneScan3D p-values, calculated using AR_KnockoffGeneration() function.
-#' @param p_ko A N*M matrix of M knockoff GeneScan3D p-values, calculated using AR_KnockoffGeneration() function.
+#' @param p0 A N-dimensional vector of the original GeneScan3D p-values, calculated using GeneScan3D.KnockoffGeneration() function.
+#' @param p_ko A N*M matrix of M knockoff GeneScan3D p-values, calculated using GeneScan3D.KnockoffGeneration() function.
 #' @param fdr  The false discovery rate (FDR) threshold. The default is 0.1.
 #' @param gene_id The genes id for N genes considered in the analysis. Usually we consider N=~20,000 protein-coding genes.
 #' @return \item{W}{The knockoff statistics for each gene.}

@@ -12,7 +12,7 @@ An object of class \code{data.frame} with 100 rows and 7 columns.
 data("GeneScan3DKnock.example")
 }
 \description{
-This example dataset contains the original and M=5 knockoff p-values for N=100 genes. Each row presents gene id, original GeneScan3D p-value and M knockoff GeneScan3D p-values. The original and knockoff GeneScan3D p-values are generated using AR_KnockoffGeneration() function.
+This example dataset contains the original and M=5 knockoff p-values for N=100 genes. Each row presents gene id, original GeneScan3D p-value and M knockoff GeneScan3D p-values. The original and knockoff GeneScan3D p-values are generated using GeneScan3D.KnockoffGeneration() function.
 }
 \details{
 This example dataset can be used to calculate the knockoff statistics and q-values for GeneScan3DKnock() function.

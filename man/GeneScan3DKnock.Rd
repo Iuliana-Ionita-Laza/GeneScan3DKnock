@@ -17,9 +17,9 @@ GeneScan3DKnock(
 \arguments{
 \item{M}{Number of multiple knockoffs.}
 
-\item{p0}{A N-dimensional vector of the original GeneScan3D p-values, calculated using AR_KnockoffGeneration() function.}
+\item{p0}{A N-dimensional vector of the original GeneScan3D p-values, calculated using GeneScan3D.KnockoffGeneration() function.}
 
-\item{p_ko}{A N*M matrix of M knockoff GeneScan3D p-values, calculated using AR_KnockoffGeneration() function.}
+\item{p_ko}{A N*M matrix of M knockoff GeneScan3D p-values, calculated using GeneScan3D.KnockoffGeneration() function.}
 
 \item{fdr}{The false discovery rate (FDR) threshold. The default is 0.1.}
 
@@ -33,7 +33,7 @@ GeneScan3DKnock(
 \item{gene_sign}{Significant genes with q-values less then the fdr threshold.}
 }
 \description{
-This function performs the knockoff filter, and computes the q-value for each gene. This function takes the results from the AR_KnockoffGeneration() function and get knockoff statistics and q-values.
+This function performs the knockoff filter, and computes the q-value for each gene. This function takes the results from the GeneScan3D.KnockoffGeneration() function and get knockoff statistics and q-values.
 }
 \examples{
 library(GeneScan3DKnock)

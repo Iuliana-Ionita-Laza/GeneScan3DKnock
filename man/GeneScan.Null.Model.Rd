@@ -18,7 +18,7 @@ GeneScan.Null.Model(Y, X = NULL, id = NULL, out_type = "C", B = 1000)
 \item{B}{Number of resampling replicates. The default is 1000. A larger value leads to more accurate and stable p-value calculation, but requires more computing time.}
 }
 \value{
-It returns a list used for function GeneScan1D(), GeneScan3D() and AR_KnockoffGeneration().
+It returns a list used for function GeneScan1D(), GeneScan3D() and GeneScan3D.KnockoffGeneration().
 }
 \description{
 This function does the preliminary data management and fit the model under null hypothesis using all the covariates. The output will be used in the other GeneScan functions.
