@@ -107,7 +107,8 @@ R=KnockoffGeneration.example$R
 set.seed(12345)
 result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
 
-result.GeneScan3D.KnockoffGeneration=GeneScan3D.KnockoffGeneration(G_gene_buffer_surround=G_gene_buffer_surround,
+result.GeneScan3D.KnockoffGeneration=GeneScan3D.KnockoffGeneration(
+G_gene_buffer_surround=G_gene_buffer_surround,
 variants_gene_buffer_surround=variants_gene_buffer_surround,
 gene_buffer.pos=gene_buffer.pos,promoter.pos=promoter.pos,R=R, 
 G_EnhancerAll_surround=G_EnhancerAll_surround, 
