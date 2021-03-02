@@ -23,6 +23,7 @@ Please see the GeneScan3DKnock user manual for detailed usage of GeneScan3DKnock
 
 ## Author and Maintainer: 
 Author: Shiyang Ma, James Dalgleish, Zihuai He, Iuliana Ionita-Laza
+
 Maintainer: Shiyang Ma <sm4857@cumc.columbia.edu>
 
 ## Version
