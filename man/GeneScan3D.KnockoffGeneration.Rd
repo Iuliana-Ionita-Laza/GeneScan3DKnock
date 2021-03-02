@@ -71,7 +71,7 @@ GeneScan3D.KnockoffGeneration(
 \item{GeneScan3D.Cauchy_knockoff}{A M by 3 GeneScan3D p-values matrix of all, common and rare variants for M knockoff genotypes.}
 }
 \description{
-This function conducts an auto-regressive model by generating the multiple knockoffs data and computes the p-values. This function generates the knockoffs for the gene and regulatory elements using surrounding regions, then compute original and knockoff GeneScan3D p-values. The recommended size of surrounding regions is 200 Kb.
+This function generates multiple knockoff genotypes for a gene and the corresponding regulatory elements based on an auto-regressive model.  Additionally, it computes p-values from the GeneScan3D test for a gene based on the original data, and each of the knockoff replicates.
 }
 \examples{
 library(GeneScan3DKnock)

@@ -807,7 +807,7 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
 
 #' GeneScan3D AR Knockoff Generation: an auto-regressive model for knockoff generation. 
 #'
-#' This function conducts an auto-regressive model by generating the multiple knockoffs data and computes the p-values. This function generates the knockoffs for the gene and regulatory elements using surrounding regions, then compute original and knockoff GeneScan3D p-values. The recommended size of surrounding regions is 200 Kb.
+#' This function generates multiple knockoff genotypes for a gene and the corresponding regulatory elements based on an auto-regressive model.  Additionally, it computes p-values from the GeneScan3D test for a gene based on the original data, and each of the knockoff replicates.
 #'
 #' @param M Numer of multiple knockoffs.
 #' @param G_gene_buffer_surround The genotype matrix of the surrounding region for gene buffer region. 
