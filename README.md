@@ -1,5 +1,5 @@
 # GeneScan3DKnock 
-This is a R package for performing improved gene-based testing by integrating long-range chromatin interactions and knockoff statistics.
+This is an R package for performing improved gene-based testing by integrating long-range chromatin interactions and knockoff statistics.
 
 ## Description
 Functions for the gene-based association tests that integrate both common and rare genetic variation from proximal and distal regulatory elements, including promoter and enhancers for each gene, along with the knockoff-enhanced tests. The GeneScan3DKnock has two steps: Step 1. Knockoff generation using AR_KnockoffGeneration() function and Step 2. Knockoff filter using GeneScan3DKnock().
