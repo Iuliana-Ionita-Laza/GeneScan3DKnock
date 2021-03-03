@@ -2,7 +2,7 @@
 This is an R package for performing improved gene-based testing by integrating long-range chromatin interactions and knockoff statistics.
 
 ## Description
-This function generates multiple knockoff genotypes for a gene and the corresponding regulatory elements based on an auto-regressive model.  Additionally, it computes p-values from the GeneScan3D test for a gene based on the original data, and each of the knockoff replicates.
+Functions for the gene-based association tests that integrate both common and rare genetic variation from promoter and enhancers for each gene, along with the knockoff-enhanced tests. The GeneScan3DKnock has two steps: Step 1. Knockoff generation using function AR_KnockoffGeneration() and Step 2. Knockoff filter using function GeneScan3DKnock().
 
 ## Workflow
 ![Workflow](https://user-images.githubusercontent.com/57265092/99107266-8c690a80-25b3-11eb-8fe1-ceb388bffa38.jpg)
