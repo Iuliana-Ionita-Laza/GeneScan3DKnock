@@ -885,16 +885,18 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
 #' @import abind
 #' @import KnockoffScreen
 #' @export
-GeneScan3D.KnockoffGeneration<-function(G_gene_buffer_surround=G_gene_buffer_surround,
-                                variants_gene_buffer_surround=variants_gene_buffer_surround,
-                                gene_buffer.pos=gene_buffer.pos,promoter.pos=promoter.pos,R=R, 
-                                G_EnhancerAll_surround=G_EnhancerAll_surround, 
-                                variants_EnhancerAll_surround=variants_EnhancerAll_surround,
-                                p_EnhancerAll_surround=p_EnhancerAll_surround,
-                                Enhancer.pos=Enhancer.pos,p.EnhancerAll=p_EnhancerAll,
-                                Z=Z_gene_buffer,Z.promoter=Z_promoter,Z.EnhancerAll=Z_EnhancerAll, 
-                                window.size=c(1000,5000,10000),
-                                MAC.threshold=5,MAF.threshold=0.01,Gsub.id=NULL,result.null.model=result.null.model,M=5){
+GeneScan3D.KnockoffGeneration=function(G_gene_buffer_surround=G_gene_buffer_surround,
+                                       variants_gene_buffer_surround=variants_gene_buffer_surround,
+                                       gene_buffer.pos=gene_buffer.pos,promoter.pos=promoter.pos,R=R,
+                                       G_EnhancerAll_surround=G_EnhancerAll_surround,
+                                       variants_EnhancerAll_surround=variants_EnhancerAll_surround,
+                                       p_EnhancerAll_surround=p_EnhancerAll_surround,
+                                       Enhancer.pos=Enhancer.pos,p.EnhancerAll=p_EnhancerAll,
+                                       Z=Z_gene_buffer,Z.promoter=Z_promoter,Z.EnhancerAll=Z_EnhancerAll,
+                                       window.size=c(1000,5000,10000),
+                                       MAC.threshold=5,MAF.threshold=0.01,Gsub.id=NULL,result.null.model=result.null.model,M=5){
+   
+   
    
    mu<-result.null.model$nullglm$fitted.values;
    Y.res<-result.null.model$Y-mu
@@ -947,14 +949,19 @@ GeneScan3D.KnockoffGeneration<-function(G_gene_buffer_surround=G_gene_buffer_sur
    positions_gene_buffer=variants_gene_buffer_surround_filter[variants_gene_buffer_surround_filter<=gene_buffer.pos[2]&variants_gene_buffer_surround_filter>=gene_buffer.pos[1]]
    G_gene_buffer=G_gene_buffer_surround[,variants_gene_buffer_surround_filter%in%positions_gene_buffer]
    
-   positions_promoter=variants_gene_buffer_surround_filter[variants_gene_buffer_surround_filter<=promoter.pos[2]&variants_gene_buffer_surround_filter>=promoter.pos[1]]
-   G_promoter=G_gene_buffer_surround[,variants_gene_buffer_surround_filter%in%positions_promoter]
+   G_promoter=NULL
+   if(!is.null(promoter.pos)){
+      positions_promoter=variants_gene_buffer_surround_filter[variants_gene_buffer_surround_filter<=promoter.pos[2]&variants_gene_buffer_surround_filter>=promoter.pos[1]]
+      G_promoter=G_gene_buffer_surround[,variants_gene_buffer_surround_filter%in%positions_promoter]
+   }
    
    ##functional annotation
+   Z_gene_buffer=NULL
    if(!is.null(Z)){
       positions_gene_buffer_nonfilter=variants_gene_buffer_surround[variants_gene_buffer_surround<=gene_buffer.pos[2]&variants_gene_buffer_surround>=gene_buffer.pos[1]]
       Z_gene_buffer=as.matrix(Z[positions_gene_buffer_nonfilter%in%positions_gene_buffer,])
    }
+   Z_promoter=NULL
    if(!is.null(Z.promoter)){
       positions_promoter_nonfilter=variants_gene_buffer_surround[variants_gene_buffer_surround<=promoter.pos[2]&variants_gene_buffer_surround>=promoter.pos[1]]
       Z_promoter=as.matrix(Z.promoter[positions_promoter_nonfilter%in%positions_promoter,])
@@ -966,69 +973,72 @@ GeneScan3D.KnockoffGeneration<-function(G_gene_buffer_surround=G_gene_buffer_sur
    Z_EnhancerAll=c()
    G_EnhancerAll_knockoff=c()
    
-   for (r in 1:R){
-      print(r)
-      ##genotype Enhancer_surround_region
-      if (r==1){
-         G_Enhancer_surround=G_EnhancerAll_surround[,1:cumsum(p_EnhancerAll_surround)[r]]
-         positions_Enhancer_surround=variants_EnhancerAll_surround[1:cumsum(p_EnhancerAll_surround)[r]]
-      }else{
-         G_Enhancer_surround=G_EnhancerAll_surround[,(cumsum(p_EnhancerAll_surround)[r-1]+1):cumsum(p_EnhancerAll_surround)[r]]
-         positions_Enhancer_surround=variants_EnhancerAll_surround[(cumsum(p_EnhancerAll_surround)[r-1]+1):cumsum(p_EnhancerAll_surround)[r]]
-      }
-      
-      #individuals ids are matched with genotype
-      G_Enhancer_surround=Matrix(G_Enhancer_surround[match.index,])
-      #missing genotype imputation
-      G_Enhancer_surround[G_Enhancer_surround==-9 | G_Enhancer_surround==9]=NA
-      N_MISS=sum(is.na(G_Enhancer_surround))
-      MISS.freq=apply(is.na(G_Enhancer_surround),2,mean)
-      if(N_MISS>0){
-         msg<-sprintf("The missing genotype rate is %f. Imputation is applied.", N_MISS/nrow(G_Enhancer_surround)/ncol(G_Enhancer_surround))
-         warning(msg,call.=F)
-         G_Enhancer_surround=Impute(G_Enhancer_surround,impute.method)
-      }
-      
-      #MAF filtering
-      MAF<-apply(G_Enhancer_surround,2,mean)/2 #MAF of nonfiltered variants
-      G_Enhancer_surround[,MAF>0.5 & !is.na(MAF)]<-2-G_Enhancer_surround[,MAF>0.5 & !is.na(MAF)]
-      MAF<-apply(G_Enhancer_surround,2,mean)/2
-      MAC<-apply(G_Enhancer_surround,2,sum) #minor allele count
-      s<-apply(G_Enhancer_surround,2,sd)
-      SNP.index<-which(MAF>0 & s!=0 & !is.na(MAF) & MISS.freq<0.1) 
-      length(SNP.index)
-      
-      check.index<-which(MAF>0 & s!=0 & !is.na(MAF)  & MISS.freq<0.1)
-      if(length(check.index)<=1){
-         warning('Number of variants with missing rate <=10% in the gene is <=1')
-      }
-      
-      G_Enhancer_surround<-Matrix(G_Enhancer_surround[,SNP.index])
-      positions_Enhancer_surround_filter=positions_Enhancer_surround[SNP.index]
-      G_Enhancer_surround_knockoff<-create.MK(G_Enhancer_surround,pos=positions_Enhancer_surround_filter,M=M,corr_max=0.75)
-      positions_enhancer=positions_Enhancer_surround_filter[positions_Enhancer_surround_filter<=Enhancer.pos[r,2]&positions_Enhancer_surround_filter>=Enhancer.pos[r,1]]
-      
-      G_enhancer=Matrix(G_Enhancer_surround[,positions_Enhancer_surround_filter%in%positions_enhancer])
-      G_EnhancerAll=cbind(G_EnhancerAll,G_enhancer)
-      
-      p_Enhancer=length(positions_enhancer)
-      p_EnhancerAll=c(p_EnhancerAll,p_Enhancer)
-      
-      G_enhancer_knockoff=array(0, dim = c(M, 2000, p_Enhancer))
-      ##M knockoffs
-      for(k in 1:M){
-         G_Enhancer_surround_knockoff_k=G_Enhancer_surround_knockoff[k,,]
-         G_enhancer_knockoff[k,,]=G_Enhancer_surround_knockoff_k[,positions_Enhancer_surround_filter%in%positions_enhancer]
-      }
-      G_EnhancerAll_knockoff=abind(G_EnhancerAll_knockoff,G_enhancer_knockoff)
-      
-      ##functional annotation
-      if(!is.null(Z.EnhancerAll)){
-         if (r==1){Z_Enhancer=as.matrix(Z.EnhancerAll[1:cumsum(p.EnhancerAll)[r],])}else{
-            Z_Enhancer=as.matrix(Z.EnhancerAll[(cumsum(p.EnhancerAll)[r-1]+1):cumsum(p.EnhancerAll)[r],])}
+   if (R!=0){
+      for (r in 1:R){
+         print(r)
+         ##genotype Enhancer_surround_region
+         if (r==1){
+            G_Enhancer_surround=G_EnhancerAll_surround[,1:cumsum(p_EnhancerAll_surround)[r]]
+            positions_Enhancer_surround=variants_EnhancerAll_surround[1:cumsum(p_EnhancerAll_surround)[r]]
+         }else{
+            G_Enhancer_surround=G_EnhancerAll_surround[,(cumsum(p_EnhancerAll_surround)[r-1]+1):cumsum(p_EnhancerAll_surround)[r]]
+            positions_Enhancer_surround=variants_EnhancerAll_surround[(cumsum(p_EnhancerAll_surround)[r-1]+1):cumsum(p_EnhancerAll_surround)[r]]
+         }
          
-         Z_Enhancer=as.matrix(Z_Enhancer[positions_Enhancer_surround[positions_Enhancer_surround<=Enhancer.pos[r,2]&positions_Enhancer_surround>=Enhancer.pos[r,1]]%in%positions_enhancer,])
-         Z_EnhancerAll=rbind(Z_EnhancerAll,Z_Enhancer)
+         #individuals ids are matched with genotype
+         G_Enhancer_surround=Matrix(G_Enhancer_surround[match.index,])
+         #missing genotype imputation
+         G_Enhancer_surround[G_Enhancer_surround==-9 | G_Enhancer_surround==9]=NA
+         N_MISS=sum(is.na(G_Enhancer_surround))
+         MISS.freq=apply(is.na(G_Enhancer_surround),2,mean)
+         if(N_MISS>0){
+            msg<-sprintf("The missing genotype rate is %f. Imputation is applied.", N_MISS/nrow(G_Enhancer_surround)/ncol(G_Enhancer_surround))
+            warning(msg,call.=F)
+            G_Enhancer_surround=Impute(G_Enhancer_surround,impute.method)
+         }
+         
+         #MAF filtering
+         MAF<-apply(G_Enhancer_surround,2,mean)/2 #MAF of nonfiltered variants
+         G_Enhancer_surround[,MAF>0.5 & !is.na(MAF)]<-2-G_Enhancer_surround[,MAF>0.5 & !is.na(MAF)]
+         MAF<-apply(G_Enhancer_surround,2,mean)/2
+         MAC<-apply(G_Enhancer_surround,2,sum) #minor allele count
+         s<-apply(G_Enhancer_surround,2,sd)
+         SNP.index<-which(MAF>0 & s!=0 & !is.na(MAF) & MISS.freq<0.1) 
+         length(SNP.index)
+         
+         check.index<-which(MAF>0 & s!=0 & !is.na(MAF)  & MISS.freq<0.1)
+         if(length(check.index)<=1){
+            warning('Number of variants with missing rate <=10% in the gene is <=1')
+         }
+         
+         G_Enhancer_surround<-Matrix(G_Enhancer_surround[,SNP.index])
+         positions_Enhancer_surround_filter=positions_Enhancer_surround[SNP.index]
+         
+         G_Enhancer_surround_knockoff<-create.MK(G_Enhancer_surround,pos=positions_Enhancer_surround_filter,M=M,corr_max=0.75)
+         
+         positions_enhancer=positions_Enhancer_surround_filter[positions_Enhancer_surround_filter<=Enhancer.pos[r,2]&positions_Enhancer_surround_filter>=Enhancer.pos[r,1]]
+         G_enhancer=Matrix(G_Enhancer_surround[,positions_Enhancer_surround_filter%in%positions_enhancer])
+         G_EnhancerAll=cbind(G_EnhancerAll,G_enhancer)
+         
+         p_Enhancer=length(positions_enhancer)
+         p_EnhancerAll=c(p_EnhancerAll,p_Enhancer)
+         
+         G_enhancer_knockoff=array(0, dim = c(M, result.null.model$n, p_Enhancer))
+         ##M knockoffs
+         for(k in 1:M){
+            G_Enhancer_surround_knockoff_k=G_Enhancer_surround_knockoff[k,,]
+            G_enhancer_knockoff[k,,]=G_Enhancer_surround_knockoff_k[,positions_Enhancer_surround_filter%in%positions_enhancer]
+         }
+         G_EnhancerAll_knockoff=abind(G_EnhancerAll_knockoff,G_enhancer_knockoff)
+         
+         ##functional annotation
+         if(!is.null(Z.EnhancerAll)){
+            if (r==1){Z_Enhancer=as.matrix(Z.EnhancerAll[1:cumsum(p.EnhancerAll)[r],])}else{
+               Z_Enhancer=as.matrix(Z.EnhancerAll[(cumsum(p.EnhancerAll)[r-1]+1):cumsum(p.EnhancerAll)[r],])}
+            
+            Z_Enhancer=as.matrix(Z_Enhancer[positions_Enhancer_surround[positions_Enhancer_surround<=Enhancer.pos[r,2]&positions_Enhancer_surround>=Enhancer.pos[r,1]]%in%positions_enhancer,])
+            Z_EnhancerAll=rbind(Z_EnhancerAll,Z_Enhancer)
+         }
       }
    }
    
@@ -1037,19 +1047,23 @@ GeneScan3D.KnockoffGeneration<-function(G_gene_buffer_surround=G_gene_buffer_sur
    GeneScan3D.Cauchy=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.promoter=Z_promoter,
                                 G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, R=R,
                                 p_Enhancer=p_EnhancerAll,window.size=c(1000,5000,10000),pos=positions_gene_buffer,
-                                MAC.threshold=5,MAF.threshold=0.01,result.null.model=result.null.model)$GeneScan3D.Cauchy.pvalue
+                                MAC.threshold=5,MAF.threshold=0.01,result.null.model=result.null.model,Gsub.id=row.names(G_gene_buffer))$GeneScan3D.Cauchy.pvalue
    
    #M knockoff p-values 
    GeneScan3D.Cauchy_knockoff=matrix(NA,nrow=M,ncol=3)
    for (k in 1:M){
       G_gene_buffer_surround_knockoff_k=G_gene_buffer_surround_knockoff[k,,]
       G_gene_buffer_knockoff_k=G_gene_buffer_surround_knockoff_k[,variants_gene_buffer_surround_filter%in%positions_gene_buffer]
-      G_promoter_knockoff_k=G_gene_buffer_surround_knockoff_k[,variants_gene_buffer_surround_filter%in%positions_promoter]
+      
+      G_promoter_knockoff_k=NULL
+      if(!is.null(Z.promoter)){
+         G_promoter_knockoff_k=G_gene_buffer_surround_knockoff_k[,variants_gene_buffer_surround_filter%in%positions_promoter]
+      }
       
       GeneScan3D.Cauchy_knockoff[k,]=GeneScan3D(G=G_gene_buffer_knockoff_k,Z=Z_gene_buffer,G.promoter=G_promoter_knockoff_k,Z.promoter=Z_promoter,
                                                 G.EnhancerAll=G_EnhancerAll_knockoff[k,,],Z.EnhancerAll=Z_EnhancerAll, R=R,
                                                 p_Enhancer=p_EnhancerAll,window.size=c(1000,5000,10000),pos=positions_gene_buffer,
-                                                MAC.threshold=5,MAF.threshold=0.01,result.null.model=result.null.model)$GeneScan3D.Cauchy.pvalue
+                                                MAC.threshold=5,MAF.threshold=0.01,result.null.model=result.null.model,Gsub.id=row.names(G_gene_buffer))$GeneScan3D.Cauchy.pvalue
    }
    return(list(GeneScan3D.Cauchy=GeneScan3D.Cauchy,GeneScan3D.Cauchy_knockoff=GeneScan3D.Cauchy_knockoff))
 }
