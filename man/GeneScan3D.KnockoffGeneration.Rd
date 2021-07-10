@@ -19,7 +19,7 @@ GeneScan3D.KnockoffGeneration(
   Z.promoter = Z_promoter,
   Z.EnhancerAll = Z_EnhancerAll,
   window.size = c(1000, 5000, 10000),
-  MAC.threshold = 5,
+  MAC.threshold = 10,
   MAF.threshold = 0.01,
   Gsub.id = NULL,
   result.null.model = result.null.model,

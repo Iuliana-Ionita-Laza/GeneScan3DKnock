@@ -648,7 +648,7 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
    if(R!=0){
       Enhancer_ind=rep(TRUE,R)
       for (r in 1:R){ #Loop for each enhancer
-         print(r)
+         #print(paste0('Enhancer',r))
          if (r==1){
             G.Enhancer=G.EnhancerAll[,1:cumsum(p_Enhancer)[r]]
          }else{
@@ -894,7 +894,7 @@ GeneScan3D.KnockoffGeneration=function(G_gene_buffer_surround=G_gene_buffer_surr
                                        Enhancer.pos=Enhancer.pos,p.EnhancerAll=p_EnhancerAll,
                                        Z=Z_gene_buffer,Z.promoter=Z_promoter,Z.EnhancerAll=Z_EnhancerAll,
                                        window.size=c(1000,5000,10000),
-                                       MAC.threshold=5,MAF.threshold=0.01,Gsub.id=NULL,result.null.model=result.null.model,M=5){
+                                       MAC.threshold=10,MAF.threshold=0.01,Gsub.id=NULL,result.null.model=result.null.model,M=5){
    
    
    
@@ -975,7 +975,6 @@ GeneScan3D.KnockoffGeneration=function(G_gene_buffer_surround=G_gene_buffer_surr
    
    if (R!=0){
       for (r in 1:R){
-         print(r)
          ##genotype Enhancer_surround_region
          if (r==1){
             G_Enhancer_surround=G_EnhancerAll_surround[,1:cumsum(p_EnhancerAll_surround)[r]]
@@ -1046,8 +1045,8 @@ GeneScan3D.KnockoffGeneration=function(G_gene_buffer_surround=G_gene_buffer_surr
    ##original p-values
    GeneScan3D.Cauchy=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.promoter=Z_promoter,
                                 G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, R=R,
-                                p_Enhancer=p_EnhancerAll,window.size=c(1000,5000,10000),pos=positions_gene_buffer,
-                                MAC.threshold=5,MAF.threshold=0.01,result.null.model=result.null.model,Gsub.id=row.names(G_gene_buffer))$GeneScan3D.Cauchy.pvalue
+                                p_Enhancer=p_EnhancerAll,window.size=window.size,pos=positions_gene_buffer,
+                                MAC.threshold=MAC.threshold,MAF.threshold=MAF.threshold,result.null.model=result.null.model,Gsub.id=row.names(G_gene_buffer))$GeneScan3D.Cauchy.pvalue
    
    #M knockoff p-values 
    GeneScan3D.Cauchy_knockoff=matrix(NA,nrow=M,ncol=3)
@@ -1062,8 +1061,8 @@ GeneScan3D.KnockoffGeneration=function(G_gene_buffer_surround=G_gene_buffer_surr
       
       GeneScan3D.Cauchy_knockoff[k,]=GeneScan3D(G=G_gene_buffer_knockoff_k,Z=Z_gene_buffer,G.promoter=G_promoter_knockoff_k,Z.promoter=Z_promoter,
                                                 G.EnhancerAll=G_EnhancerAll_knockoff[k,,],Z.EnhancerAll=Z_EnhancerAll, R=R,
-                                                p_Enhancer=p_EnhancerAll,window.size=c(1000,5000,10000),pos=positions_gene_buffer,
-                                                MAC.threshold=5,MAF.threshold=0.01,result.null.model=result.null.model,Gsub.id=row.names(G_gene_buffer))$GeneScan3D.Cauchy.pvalue
+                                                p_Enhancer=p_EnhancerAll,window.size=window.size,pos=positions_gene_buffer,
+                                                MAC.threshold=MAC.threshold,MAF.threshold=MAF.threshold,result.null.model=result.null.model,Gsub.id=row.names(G_gene_buffer))$GeneScan3D.Cauchy.pvalue
    }
    return(list(GeneScan3D.Cauchy=GeneScan3D.Cauchy,GeneScan3D.Cauchy_knockoff=GeneScan3D.Cauchy_knockoff))
 }

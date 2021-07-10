@@ -1,6 +1,6 @@
 Package: GeneScan3DKnock
 Type: Package
-Title: Improved gene-based testing by integrating long-range chromatin interactions and knockoff statistics
+Title: Powerful gene-based testing by integrating long-range chromatin interactions and knockoff genotypes
 Version: 0.2
 Author: Shiyang Ma, James Dalgleish, Zihuai He, Iuliana Ionita-Laza
 Maintainer: Shiyang Ma <sm4857@cumc.columbia.edu>
