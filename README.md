@@ -19,7 +19,8 @@ library(devtools)
 devtools::install_github("Iuliana-Ionita-Laza/GeneScan3DKnock")
 
 ## Usage
-Please see the GeneScan3DKnock **user manual** for detailed usage of GeneScan3DKnock package "https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_0.2.pdf". Please see the **tutorial** of using the GeneScan3DKnock package "https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_vignette.html".
+Please see the GeneScan3DKnock **user manual** for detailed usage of GeneScan3DKnock package "https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_0.2.pdf". Please see the **tutorial** of using the GeneScan3DKnock package "https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_vignette.html".
+
 
 ## Authors and Maintainer: 
 Authors: Shiyang Ma, James Dalgleish, Zihuai He, Iuliana Ionita-Laza
