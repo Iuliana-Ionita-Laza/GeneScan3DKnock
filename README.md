@@ -27,7 +27,7 @@ Authors: Shiyang Ma, James Dalgleish, Zihuai He, Iuliana Ionita-Laza
 Maintainer: Shiyang Ma <sm4857@cumc.columbia.edu>
 
 ## Version
-The current version is 0.2 (July 9, 2021).
+The current version is 0.2 (March 3, 2021).
 
 ## Citation
 Ma, S., Dalgleish, J. L ., Lee, J., Wang, C., Liu, L., Gill, R., Buxbaum, J. D., Chung, W., Aschard, H., Silverman, E. K., Cho, M. H., He, Z. and Ionita-Laza, I. "Powerful gene-based testing by integrating long-range chromatin interactions and knockoff genotypes", 2021
