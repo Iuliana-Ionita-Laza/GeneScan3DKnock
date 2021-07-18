@@ -1,0 +1,157 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+<style>
+  .main-container {
+    max-width: 1200px !important;
+  }
+</style>
+<style type="text/css">
+.main-container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+---
+title: "GeneScan3DKnock"
+author: "Shiyang Ma"
+date: "7/8/2021"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteIndexEntry{GeneScan3DKnock}
+ %\VignetteEncoding{UTF-8}
+---
+
+The GeneScan3DKnock R package accompanies with paper 'Powerful gene-based testing by integrating long-range chromatin interactions and knockoff genotypes', which is designed for gene-based tests incorporating regulatory elements and knockoffs. The package contains three major components: GeneScan1D, GeneScan3D and GeneScan3Dknock tests, which can be used in gene-level whole-genome sequencing studies. 
+
+#### Example dataset:
+The simulated example dataset contains an outcome variable Y, a covariate X, genotype and functional annotation matrices for gene and buffer region, promoter and two enhancers, positions of genetic variants in gene and buffer region. 
+
+We generated genotypes for 2,000 individuals in a 14.5 Kb gene region simulated using the haplotype dataset in the SKAT package. The SKAT haplotype dataset was generated using a coalescent model (COSI), mimicking the linkage disequilibrium structure of European ancestry samples. We take as promoter the 0.5 Kb region downstream of the TSS. We also randomly generated two enhancers with length 2 KB, outside the 15 Kb gene plus promoter region. All variants (both common and rare) are considered.
+
+```{r setup, include=T,message=F,error=F,warning=F}
+library(GeneScan3DKnock)
+
+# Load data example
+# Y: outcomes, n by 1 matrix for n=2000 individuals
+# X: covariates, n by d matrix for d=1 covariate
+# G_gene_buffer: genotype matrix of gene buffer region, n by p matrix, p=287 variants
+# pos_gene_buffer: positions of p=287 genetic variants
+# Z_gene_buffer: p by q functional annotation matrix, q=1 functional annotation
+
+data("GeneScan3D.example")
+Y=GeneScan3D.example$Y; X=GeneScan3D.example$X; n=length(Y)
+
+G_gene_buffer=GeneScan3D.example$G_gene_buffer
+G_promoter=GeneScan3D.example$G_promoter
+G_EnhancerAll=cbind(GeneScan3D.example$G_Enhancer1,GeneScan3D.example$G_Enhancer2)
+
+Z_gene_buffer=GeneScan3D.example$Z_gene_buffer
+Z_promoter=GeneScan3D.example$Z_promoter
+Z_EnhancerAll=rbind(GeneScan3D.example$Z_Enhancer1,GeneScan3D.example$Z_Enhancer2)
+
+pos_gene_buffer=GeneScan3D.example$pos_gene_buffer
+p_EnhancerAll=c(dim(GeneScan3D.example$G_Enhancer1)[2],dim(GeneScan3D.example$G_Enhancer2)[2])
+
+# Preliminary data management
+set.seed(12345)
+result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
+```
+
+We conduct GeneScan1D and GeneScan3D analyses by scanning the gene buffer region using window sizes 1 Kb, 5 Kb and 10 Kb. We also incorporate promoter and two enhancers into the GeneScan3D analysis. Cauchy combination p-values for all variants, common variants and rare variants are obtained for GeneScan1D and GeneScan3D tests. Note the following results are depending on R 3.6.1. The results could be different for different R versions due to random number generator.
+```{r GeneScan, include=T,message=F,error=F,warning=F}
+#Conduct GeneScan1D analysis
+result.GeneScan1D=GeneScan1D(G=G_gene_buffer,Z=Z_gene_buffer,pos=pos_gene_buffer,
+                             window.size=c(1000,5000,10000),MAC.threshold=5,MAF.threshold=0.01,
+                             result.null.model=result.null.model)
+result.GeneScan1D$GeneScan1D.Cauchy.pvalue 
+#Number of scnaning windows
+result.GeneScan1D$M  
+
+# Conduct GeneScan3D analysis
+result.GeneScan3D=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,
+                             G.promoter=G_promoter,Z.promoter=Z_promoter,
+                             G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, 
+                             R=2,p_Enhancer=p_EnhancerAll,
+                             pos=pos_gene_buffer,
+                             window.size=c(1000,5000,10000),MAC.threshold=10,MAF.threshold=0.01,
+                             result.null.model=result.null.model)
+result.GeneScan3D$GeneScan3D.Cauchy.pvalue
+```
+
+Then we conduct GeneScan3D AR Knockoff Generation by generate multiple knockoffs for the gene buffer region and each enhancer based on an auto-regressive model. We provide genotypes of plus and minus 10 Kb surrounding regions for the 15 Kb gene buffer region and two 2 Kb enhancers separately. The knockoff generation include the surrounding regions for LD structure. In real data analyses, the surrounding regions can increase to plus and minus 100 Kb.
+
+The function computes p-values from the GeneScan3D test for the original genotype data, and each of the M=5 multiple knockoff replicates.
+
+```{r Knockoff Generation, include=T,message=F,error=F,warning=F}
+data(KnockoffGeneration.example)
+Y=KnockoffGeneration.example$Y; X=KnockoffGeneration.example$X; 
+
+# 20 Kb surrounding regions for 15 Kb gene buffer region and two 2 Kb enhancers
+G_gene_buffer_surround=KnockoffGeneration.example$G_gene_buffer_surround
+variants_gene_buffer_surround=KnockoffGeneration.example$variants_gene_buffer_surround
+G_Enhancer1_surround=KnockoffGeneration.example$G_Enhancer1_surround
+variants_Enhancer1_surround=KnockoffGeneration.example$variants_Enhancer1_surround
+G_Enhancer2_surround=KnockoffGeneration.example$G_Enhancer2_surround
+variants_Enhancer2_surround=KnockoffGeneration.example$variants_Enhancer2_surround
+
+G_EnhancerAll_surround=cbind(G_Enhancer1_surround,G_Enhancer2_surround)
+variants_EnhancerAll_surround=c(variants_Enhancer1_surround,variants_Enhancer2_surround)
+p_EnhancerAll_surround=c(length(variants_Enhancer1_surround),length(variants_Enhancer2_surround))
+
+#start and end positions of gene buffer, promoter and enhancers
+gene_buffer.pos=KnockoffGeneration.example$gene_buffer.pos
+promoter.pos=KnockoffGeneration.example$promoter.pos
+Enhancer1.pos=KnockoffGeneration.example$Enhancer1.pos
+Enhancer2.pos=KnockoffGeneration.example$Enhancer2.pos   
+Enhancer.pos=rbind(Enhancer1.pos,Enhancer2.pos)
+
+#functional annotation
+Z_gene_buffer=KnockoffGeneration.example$Z_gene_buffer
+Z_promoter=KnockoffGeneration.example$Z_promoter 
+
+Z_Enhancer1=KnockoffGeneration.example$Z_Enhancer1
+Z_Enhancer2=KnockoffGeneration.example$Z_Enhancer2
+Z_EnhancerAll=rbind(Z_Enhancer1,Z_Enhancer2)
+p_EnhancerAll=c(dim(Z_Enhancer1)[1],dim(Z_Enhancer2)[1])
+
+R=KnockoffGeneration.example$R
+
+result.GeneScan3D.KnockoffGeneration=GeneScan3D.KnockoffGeneration(G_gene_buffer_surround=G_gene_buffer_surround,
+                                                   variants_gene_buffer_surround=variants_gene_buffer_surround,
+                                                   gene_buffer.pos=gene_buffer.pos,promoter.pos=promoter.pos,R=R, 
+                                                   G_EnhancerAll_surround=G_EnhancerAll_surround, 
+                                                   variants_EnhancerAll_surround=variants_EnhancerAll_surround,
+                                                   p_EnhancerAll_surround=p_EnhancerAll_surround,
+                                                   Enhancer.pos=Enhancer.pos,p.EnhancerAll=p_EnhancerAll,
+                                                   Z=Z_gene_buffer,Z.promoter=Z_promoter,Z.EnhancerAll=Z_EnhancerAll, 
+                                                   window.size=c(1000,5000,10000),
+                                                   MAC.threshold=10,MAF.threshold=0.01,Gsub.id=NULL,result.null.model=result.null.model,M=5)
+#GeneScan3D p-values for original genotypes; all variants, common variants and rare variants
+result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy  
+#p-values for M=5 knockoff genotypes; each row represents one knockoff; for all variants, common variants and rare variants (three columns)
+result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy_knockoff
+```
+
+After obtaining the original p-value and knockoffs p-values for each gene, we perform the knockoff filter for multiple testing and computes the q-values for each gene. Genes with Q-value<FDR target level (e.g. 0.1) are significant. This function takes the results from the previous GeneScan3D.KnockoffGeneration() function and get knockoff statistics and q-values.
+
+We show an example with original and knockoff p-values for 100 genes, and conduct knockoff filter for multiple testing and compute q-values for 100 genes.
+```{r Knockoff filter, include=T,message=F,error=F,warning=F}
+data(GeneScan3DKnock.example)
+#input p_0, p_1, ..., p_M (original p-values and M knockoff p-values)
+#output knockoff statistics and q-values
+result.GeneScan3DKnock=GeneScan3DKnock(M=5,p0=GeneScan3DKnock.example$GeneScan3D.original,
+                                               p_ko=cbind(GeneScan3DKnock.example$GeneScan3D.ko1,
+                                                          GeneScan3DKnock.example$GeneScan3D.ko2,
+                                                          GeneScan3DKnock.example$GeneScan3D.ko3,
+                                                          GeneScan3DKnock.example$GeneScan3D.ko4,
+                                                          GeneScan3DKnock.example$GeneScan3D.ko5),fdr = 0.1,
+                                               gene_id=GeneScan3DKnock.example$gene.id)
+result.GeneScan3DKnock$Qvalue #Q-values
+result.GeneScan3DKnock$gene_sign
+```
