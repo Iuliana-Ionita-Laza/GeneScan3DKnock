@@ -1,3 +1,5 @@
+[![R build status](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/R-CMD-check.yaml)](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock)
+
 # GeneScan3DKnock 
 This is an R package for performing improved gene-based testing by integrating long-range chromatin interactions and knockoff statistics.
 
