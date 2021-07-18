@@ -20,7 +20,7 @@ library(devtools)
 devtools::install_github("Iuliana-Ionita-Laza/GeneScan3DKnock")
 
 ## Usage
-Please see the GeneScan3DKnock <a href="https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_0.2.pdf"> **user manual** </a> for detailed usage of GeneScan3DKnock package. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_vignette.html">**tutorial**</a> of using the GeneScan3DKnock package.
+Please see the GeneScan3DKnock <a href="https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_0.2.pdf"> **user manual** </a> for detailed usage of GeneScan3DKnock package. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/vignettes/GeneScan3DKnock_vignette.html">**tutorial**</a> of using the GeneScan3DKnock package.
 
 
 ## Authors and Maintainer: 
