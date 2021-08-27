@@ -22,11 +22,14 @@ devtools::install_github("Iuliana-Ionita-Laza/GeneScan3DKnock")
 ## Usage
 Please see the GeneScan3DKnock <a href="https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/GeneScan3DKnock_0.2.pdf"> **user manual** </a> for detailed usage of GeneScan3DKnock package. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/vignettes/GeneScan3DKnock_vignette.html">**tutorial**</a> of using the GeneScan3DKnock package.
 
+## Contact
+If you have any questions about GeneScan3DKnock please contact
 
-## Authors and Maintainer: 
-Authors: Shiyang Ma, James Dalgleish, Zihuai He, Iuliana Ionita-Laza
+- <sm4857@cumc.columbia.edu>
 
-Maintainer: Shiyang Ma <sm4857@cumc.columbia.edu>
+If you want to submit a issue concerning the software please do so
+using the **GeneScan3DKnock** [Github repository](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/issues).
+
 
 ## Version
 The current version is 0.2 (March 3, 2021).
