@@ -10,14 +10,15 @@ GeneScan3D(
   G.promoter = G_promoter,
   Z.promoter = Z_promoter,
   G.EnhancerAll = G_EnhancerAll,
-  Z.EnhancerAll = Z.EnhancerAll,
+  Z.EnhancerAll = Z_EnhancerAll,
   R = length(p_EnhancerAll),
   p_Enhancer = p_EnhancerAll,
   window.size = c(1000, 5000, 10000),
   pos = pos_gene_buffer,
-  MAC.threshold = 5,
+  MAC.threshold = 10,
   MAF.threshold = 0.01,
   Gsub.id = NULL,
+  resampling = FALSE,
   result.null.model = result.null.model
 )
 }
@@ -48,6 +49,8 @@ GeneScan3D(
 
 \item{Gsub.id}{The subject id corresponding to the genotype matrix, an n dimensional vector. The default is NULL, where the matched phenotype and genotype matrices are assumed.}
 
+\item{resampling}{Resampling indicator. The default is FALSE, do not conduct resampling-based moment matching when the sample size is large, especially for UK biobank-scale data.}
+
 \item{result.null.model}{The output of function "GeneScan.Null.Model()".}
 }
 \value{
@@ -60,7 +63,7 @@ GeneScan3D(
 \item{RE_minp}{The regulartory elements in the 3D windows corresponding to the minimum p-values, for all, common and rare variants. 0 represents promoter and a number from 1 to R represents promoter and r-th enhancer.}
 }
 \description{
-This function conducts gene-based scan test on the gene buffer region, integrating proximal and distal regulatory elements for a gene, i.e., promoter and R enhancers.
+This function conducts gene-based scan test on the gene buffer region, integrating proximal and distal regulatory elements for a gene, i.e., promoter and R enhancers. For binary traits, we conduct SPA gene-based tests to deal with imbalance case-control issues.
 }
 \examples{
 library(GeneScan3DKnock)
@@ -94,7 +97,7 @@ p_EnhancerAll=c(dim(GeneScan3D.example$G_Enhancer1)[2],dim(GeneScan3D.example$G_
 
 # Preliminary data management
 set.seed(12345)
-result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
+result.null.model=GeneScan.Null.Model(Y, X, out_type="C", resampling=FALSE)
 
 # Conduct GeneScan3D analysis
 result.GeneScan3D=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,
@@ -102,7 +105,7 @@ result.GeneScan3D=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,
                             G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, 
                             R=2,p_Enhancer=p_EnhancerAll,
                             pos=pos_gene_buffer,
-                            window.size=c(1000,5000,10000),MAC.threshold=5,MAF.threshold=0.01,
+                            window.size=c(1000,5000,10000),MAC.threshold=10,MAF.threshold=0.01,
                             result.null.model=result.null.model)
 result.GeneScan3D$GeneScan3D.Cauchy.pvalue
 

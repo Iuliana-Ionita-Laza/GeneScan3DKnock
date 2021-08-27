@@ -4,7 +4,14 @@
 \alias{GeneScan.Null.Model}
 \title{The preliminary data management for GeneScan3DKnock.}
 \usage{
-GeneScan.Null.Model(Y, X = NULL, id = NULL, out_type = "C", B = 1000)
+GeneScan.Null.Model(
+  Y,
+  X = NULL,
+  id = NULL,
+  out_type = "C",
+  resampling = FALSE,
+  B = 1000
+)
 }
 \arguments{
 \item{Y}{The outcome variable, an n*1 matrix where n is the number of individuals.}
@@ -15,13 +22,15 @@ GeneScan.Null.Model(Y, X = NULL, id = NULL, out_type = "C", B = 1000)
 
 \item{out_type}{Type of outcome variable. Can be either "C" for continuous or "D" for dichotomous. The default is "C".}
 
-\item{B}{Number of resampling replicates. The default is 1000. A larger value leads to more accurate and stable p-value calculation, but requires more computing time.}
+\item{resampling}{Resampling indicator. The default is FALSE, do not conduct resampling-based moment matching when the sample size is large, especially for UK biobank-scale data.}
+
+\item{B}{Number of resampling replicates. The default is 1000, only run resampling replicates when the resampling indicator is TRUE. A larger value leads to more accurate and stable p-value calculation, but requires more computing time.}
 }
 \value{
 It returns a list used for function GeneScan1D(), GeneScan3D() and GeneScan3D.KnockoffGeneration().
 }
 \description{
-This function does the preliminary data management and fit the model under null hypothesis using all the covariates. The output will be used in the other GeneScan functions.
+This function does the preliminary data management and fit the generalized linear model under null hypothesis for unrelated samples. The output will be used in the other GeneScan functions.
 }
 \examples{
 library(GeneScan3DKnock)
@@ -33,7 +42,6 @@ data("GeneScan3D.example")
 Y=GeneScan3D.example$Y; X=GeneScan3D.example$X;
 
 # Preliminary data management
-set.seed(12345)
-result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
+result.null.model=GeneScan.Null.Model(Y, X, out_type="C", resampling=FALSE)
 
 }

@@ -6,12 +6,13 @@
 \usage{
 GeneScan1D(
   G = G_gene_buffer,
-  Z = Z_gene_buffer,
+  Z = NULL,
   window.size = c(1000, 5000, 10000),
   pos = pos_gene_buffer,
-  MAC.threshold = 5,
+  MAC.threshold = 10,
   MAF.threshold = 0.01,
   Gsub.id = NULL,
+  resampling = FALSE,
   result.null.model = result.null.model
 )
 }
@@ -24,11 +25,13 @@ GeneScan1D(
 
 \item{pos}{The positions of genetic variants in the gene buffer region, an p dimensional vector. Each position corresponds to a column in the genotype matrix and a row in the functional annotation matrix.}
 
-\item{MAC.threshold}{Threshold for minor allele count. Variants below MAC.threshold are ultra-rare variants. The recommended level is 5.}
+\item{MAC.threshold}{Threshold for minor allele count. Variants below MAC.threshold are ultra-rare variants. The recommended level is 10.}
 
 \item{MAF.threshold}{Threshold for minor allele frequency. Variants below MAF.threshold are rare variants. The recommended level is 0.01.}
 
 \item{Gsub.id}{The subject id corresponding to the genotype matrix, an n dimensional vector. The default is NULL, where the matched phenotype and genotype matrices are assumed.}
+
+\item{resampling}{Resampling indicator. The default is FALSE, do not conduct resampling-based moment matching when the sample size is large, especially for UK biobank-scale data.}
 
 \item{result.null.model}{The output of function "GeneScan.Null.Model()".}
 }
@@ -38,7 +41,7 @@ GeneScan1D(
 \item{M}{Number of 1D scanning windows.}
 }
 \description{
-This function conducts gene-based scan test on the gene buffer region using 1D windows with sizes 1-5-10 Kb.
+This function conducts gene-based scan test on the gene buffer region using 1D windows with sizes 1-5-10 Kb. For binary traits, we conduct SPA gene-based tests to deal with imbalance case-control issues.
 }
 \examples{
 library(GeneScan3DKnock)
@@ -47,23 +50,24 @@ library(GeneScan3DKnock)
 # Y: outcomes, n by 1 matrix for n=2000 individuals
 # X: covariates, n by d matrix for d=1 covariate
 # G_gene_buffer: genotype matrix of gene buffer region, n by p matrix, p=287 variants
-# pos_gene_buffer: positions of p=287 genetic variants
 # Z_gene_buffer: p by q functional annotation matrix, q=1 functional annotation
+# pos_gene_buffer: positions of p=287 genetic variants
 
 data("GeneScan3D.example")
 Y=GeneScan3D.example$Y; X=GeneScan3D.example$X;
-G_gene_buffer=GeneScan3D.example$G_gene_buffer;
-Z_gene_buffer=GeneScan3D.example$Z_gene_buffer;
+G_gene_buffer=GeneScan3D.example$G_gene_buffer;Z_gene_buffer=GeneScan3D.example$Z_gene_buffer;
 pos_gene_buffer=GeneScan3D.example$pos_gene_buffer;
 
 # Preliminary data management
 set.seed(12345)
-result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
+result.null.model=GeneScan.Null.Model(Y, X, out_type="C", resampling=FALSE)
 
 #Conduct GeneScan1D analysis
 result.GeneScan1D=GeneScan1D(G=G_gene_buffer,Z=Z_gene_buffer,pos=pos_gene_buffer,
-                            window.size=c(1000,5000,10000),MAC.threshold=5,MAF.threshold=0.01,
+                            window.size=c(1000,5000,10000),
+                            MAC.threshold=10,MAF.threshold=0.01,Gsub.id=NULL,resampling=FALSE,
                             result.null.model=result.null.model)
 result.GeneScan1D$GeneScan1D.Cauchy.pvalue 
+result.GeneScan1D$M
 
 }
