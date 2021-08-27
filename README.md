@@ -3,7 +3,9 @@
 This is an R package for performing improved gene-based testing by integrating long-range chromatin interactions and knockoff statistics.
 
 ## Description
-Functions for the gene-based association tests that integrate both common and rare genetic variation from promoter and enhancers for each gene, along with the knockoff-enhanced tests. The GeneScan3DKnock has two steps: Step 1. Knockoff generation using function GeneScan3D.KnockoffGeneration() and Step 2. Knockoff filter using function GeneScan3DKnock().
+The package contain functions for the gene-based association tests (GeneScan3D) that integrate both common and rare genetic variation from promoter and enhancers for each gene, along with the knockoff-enhanced tests. The GeneScan3DKnock has two steps: Step 1. Knockoff generation using function GeneScan3D.KnockoffGeneration() and Step 2. Knockoff filter using function GeneScan3DKnock(), after obtaining the original and knockoff p-values for each gene. 
+
+To deal with the case-control imbalance issue for binary traits, we apply the Saddlepoint approximation (SPA) of the gene-based tests to avoid the inflation of Type I error rate.
 
 ## Workflow
 ![Workflow](https://user-images.githubusercontent.com/57265092/99107266-8c690a80-25b3-11eb-8fe1-ceb388bffa38.jpg)
@@ -12,7 +14,7 @@ Functions for the gene-based association tests that integrate both common and ra
 R (recommended version >= 3.5.0)
 
 ## Dependencies
-GeneScan3DKnock imports R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm, KnockoffScreen and abind. Make sure to install those packages before installing GeneScan3DKnock.
+GeneScan3DKnock depends on R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm, KnockoffScreen and abind. Make sure to install those packages before installing GeneScan3DKnock.
     
 ## Installation
 library(devtools) 
