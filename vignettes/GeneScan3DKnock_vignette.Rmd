@@ -1,7 +1,7 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 <style>
   .main-container {
@@ -19,7 +19,7 @@ output:
 ---
 title: "GeneScan3DKnock"
 author: "Shiyang Ma"
-date: "7/8/2021"
+date: "8/27/2021"
 output: rmarkdown::html_vignette
 vignette: >
  %\VignetteEngine{knitr::rmarkdown}
@@ -36,6 +36,7 @@ We generated genotypes for 2,000 individuals in a 14.5 Kb gene region simulated 
 
 ```{r setup, include=T,message=F,error=F,warning=F}
 library(GeneScan3DKnock)
+packageVersion('GeneScan3DKnock')
 
 # Load data example
 # Y: outcomes, n by 1 matrix for n=2000 individuals
@@ -60,27 +61,29 @@ p_EnhancerAll=c(dim(GeneScan3D.example$G_Enhancer1)[2],dim(GeneScan3D.example$G_
 
 # Preliminary data management
 set.seed(12345)
-result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
+result.null.model=GeneScan.Null.Model(Y, X, out_type="C", resampling=FALSE)
 ```
 
-We conduct GeneScan1D and GeneScan3D analyses by scanning the gene buffer region using window sizes 1 Kb, 5 Kb and 10 Kb. We also incorporate promoter and two enhancers into the GeneScan3D analysis. Cauchy combination p-values for all variants, common variants and rare variants are obtained for GeneScan1D and GeneScan3D tests. Note the following results are depending on R 3.6.1. The results could be different for different R versions due to random number generator.
+We conduct GeneScan1D and GeneScan3D analyses by scanning the gene buffer region using window sizes 1 Kb, 5 Kb and 10 Kb. We also incorporate promoter and two enhancers into the GeneScan3D analysis. Cauchy combination p-values for all variants, common variants and rare variants are obtained for GeneScan1D and GeneScan3D tests. For binary traits, we conduct SPA gene-based tests to deal with imbalance case-control issues.
+
+Note the following results are depending on R 3.6.1. The results could be different for different R versions due to random number generator.
 ```{r GeneScan, include=T,message=F,error=F,warning=F}
 #Conduct GeneScan1D analysis
-result.GeneScan1D=GeneScan1D(G=G_gene_buffer,Z=Z_gene_buffer,pos=pos_gene_buffer,
-                             window.size=c(1000,5000,10000),MAC.threshold=5,MAF.threshold=0.01,
-                             result.null.model=result.null.model)
+result.GeneScan1D=GeneScan1D(G=G_gene_buffer,Z=Z_gene_buffer,pos=pos_gene_buffer,window.size=c(1000,5000,10000),
+                            MAC.threshold=10,MAF.threshold=0.01,Gsub.id=NULL,resampling=FALSE,
+                            result.null.model=result.null.model)
 result.GeneScan1D$GeneScan1D.Cauchy.pvalue 
 #Number of scnaning windows
 result.GeneScan1D$M  
 
 # Conduct GeneScan3D analysis
 result.GeneScan3D=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,
-                             G.promoter=G_promoter,Z.promoter=Z_promoter,
-                             G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, 
-                             R=2,p_Enhancer=p_EnhancerAll,
-                             pos=pos_gene_buffer,
-                             window.size=c(1000,5000,10000),MAC.threshold=10,MAF.threshold=0.01,
-                             result.null.model=result.null.model)
+                            G.promoter=G_promoter,Z.promoter=Z_promoter,
+                            G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, 
+                            R=2,p_Enhancer=p_EnhancerAll,
+                            pos=pos_gene_buffer,
+                            window.size=c(1000,5000,10000),MAC.threshold=10,MAF.threshold=0.01,
+                            result.null.model=result.null.model)
 result.GeneScan3D$GeneScan3D.Cauchy.pvalue
 ```
 
@@ -153,5 +156,5 @@ result.GeneScan3DKnock=GeneScan3DKnock(M=5,p0=GeneScan3DKnock.example$GeneScan3D
                                                           GeneScan3DKnock.example$GeneScan3D.ko5),fdr = 0.1,
                                                gene_id=GeneScan3DKnock.example$gene.id)
 result.GeneScan3DKnock$Qvalue #Q-values
-result.GeneScan3DKnock$gene_sign
+result.GeneScan3DKnock$gene_sign #no significant gene in this example
 ```

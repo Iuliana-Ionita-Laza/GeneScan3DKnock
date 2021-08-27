@@ -374,7 +374,7 @@ summary {
 
 <h1 class="title toc-ignore">GeneScan3DKnock</h1>
 <h4 class="author">Shiyang Ma</h4>
-<h4 class="date">7/8/2021</h4>
+<h4 class="date">8/27/2021</h4>
 
 </div>
 
@@ -397,8 +397,9 @@ summary {
 <p>The simulated example dataset contains an outcome variable Y, a covariate X, genotype and functional annotation matrices for gene and buffer region, promoter and two enhancers, positions of genetic variants in gene and buffer region.</p>
 <p>We generated genotypes for 2,000 individuals in a 14.5 Kb gene region simulated using the haplotype dataset in the SKAT package. The SKAT haplotype dataset was generated using a coalescent model (COSI), mimicking the linkage disequilibrium structure of European ancestry samples. We take as promoter the 0.5 Kb region downstream of the TSS. We also randomly generated two enhancers with length 2 KB, outside the 15 Kb gene plus promoter region. All variants (both common and rare) are considered.</p>
 <pre class="r"><code>library(GeneScan3DKnock)
-
-# Load data example
+packageVersion(&#39;GeneScan3DKnock&#39;)</code></pre>
+<pre><code>## [1] &#39;0.3&#39;</code></pre>
+<pre class="r"><code># Load data example
 # Y: outcomes, n by 1 matrix for n=2000 individuals
 # X: covariates, n by d matrix for d=1 covariate
 # G_gene_buffer: genotype matrix of gene buffer region, n by p matrix, p=287 variants
@@ -421,27 +422,28 @@ p_EnhancerAll=c(dim(GeneScan3D.example$G_Enhancer1)[2],dim(GeneScan3D.example$G_
 
 # Preliminary data management
 set.seed(12345)
-result.null.model=GeneScan.Null.Model(Y, X, out_type=&quot;C&quot;, B=1000)</code></pre>
-<p>We conduct GeneScan1D and GeneScan3D analyses by scanning the gene buffer region using window sizes 1 Kb, 5 Kb and 10 Kb. We also incorporate promoter and two enhancers into the GeneScan3D analysis. Cauchy combination p-values for all variants, common variants and rare variants are obtained for GeneScan1D and GeneScan3D tests. Note the following results are depending on R 3.6.1. The results could be different for different R versions due to random number generator.</p>
+result.null.model=GeneScan.Null.Model(Y, X, out_type=&quot;C&quot;, resampling=FALSE)</code></pre>
+<p>We conduct GeneScan1D and GeneScan3D analyses by scanning the gene buffer region using window sizes 1 Kb, 5 Kb and 10 Kb. We also incorporate promoter and two enhancers into the GeneScan3D analysis. Cauchy combination p-values for all variants, common variants and rare variants are obtained for GeneScan1D and GeneScan3D tests. For binary traits, we conduct SPA gene-based tests to deal with imbalance case-control issues.</p>
+<p>Note the following results are depending on R 3.6.1. The results could be different for different R versions due to random number generator.</p>
 <pre class="r"><code>#Conduct GeneScan1D analysis
-result.GeneScan1D=GeneScan1D(G=G_gene_buffer,Z=Z_gene_buffer,pos=pos_gene_buffer,
-                             window.size=c(1000,5000,10000),MAC.threshold=5,MAF.threshold=0.01,
-                             result.null.model=result.null.model)
+result.GeneScan1D=GeneScan1D(G=G_gene_buffer,Z=Z_gene_buffer,pos=pos_gene_buffer,window.size=c(1000,5000,10000),
+                            MAC.threshold=10,MAF.threshold=0.01,Gsub.id=NULL,resampling=FALSE,
+                            result.null.model=result.null.model)
 result.GeneScan1D$GeneScan1D.Cauchy.pvalue </code></pre>
-<pre><code>## [1] 0.16582724 0.06605521 0.31747315</code></pre>
+<pre><code>## [1] 0.10552243 0.07420494 0.17169086</code></pre>
 <pre class="r"><code>#Number of scnaning windows
 result.GeneScan1D$M  </code></pre>
 <pre><code>## [1] 38</code></pre>
 <pre class="r"><code># Conduct GeneScan3D analysis
 result.GeneScan3D=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,
-                             G.promoter=G_promoter,Z.promoter=Z_promoter,
-                             G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, 
-                             R=2,p_Enhancer=p_EnhancerAll,
-                             pos=pos_gene_buffer,
-                             window.size=c(1000,5000,10000),MAC.threshold=10,MAF.threshold=0.01,
-                             result.null.model=result.null.model)
+                            G.promoter=G_promoter,Z.promoter=Z_promoter,
+                            G.EnhancerAll=G_EnhancerAll,Z.EnhancerAll=Z_EnhancerAll, 
+                            R=2,p_Enhancer=p_EnhancerAll,
+                            pos=pos_gene_buffer,
+                            window.size=c(1000,5000,10000),MAC.threshold=10,MAF.threshold=0.01,
+                            result.null.model=result.null.model)
 result.GeneScan3D$GeneScan3D.Cauchy.pvalue</code></pre>
-<pre><code>## [1] 0.3083079 0.2747505 0.2961389</code></pre>
+<pre><code>## [1] 0.1958497 0.1421710 0.2318639</code></pre>
 <p>Then we conduct GeneScan3D AR Knockoff Generation by generate multiple knockoffs for the gene buffer region and each enhancer based on an auto-regressive model. We provide genotypes of plus and minus 10 Kb surrounding regions for the 15 Kb gene buffer region and two 2 Kb enhancers separately. The knockoff generation include the surrounding regions for LD structure. In real data analyses, the surrounding regions can increase to plus and minus 100 Kb.</p>
 <p>The function computes p-values from the GeneScan3D test for the original genotype data, and each of the M=5 multiple knockoff replicates.</p>
 <pre class="r"><code>data(KnockoffGeneration.example)
@@ -489,15 +491,15 @@ result.GeneScan3D.KnockoffGeneration=GeneScan3D.KnockoffGeneration(G_gene_buffer
                                                    MAC.threshold=10,MAF.threshold=0.01,Gsub.id=NULL,result.null.model=result.null.model,M=5)
 #GeneScan3D p-values for original genotypes; all variants, common variants and rare variants
 result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy  </code></pre>
-<pre><code>## [1] 0.3083079 0.2747505 0.2961389</code></pre>
+<pre><code>## [1] 0.1958497 0.1421710 0.2318639</code></pre>
 <pre class="r"><code>#p-values for M=5 knockoff genotypes; each row represents one knockoff; for all variants, common variants and rare variants (three columns)
 result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy_knockoff</code></pre>
-<pre><code>##            [,1]      [,2]       [,3]
-## [1,] 0.12579725 0.5482446 0.12003290
-## [2,] 0.08360552 0.7786453 0.09933164
-## [3,] 0.15917548 0.7771737 0.10974912
-## [4,] 0.44731470 0.1380223 0.78603502
-## [5,] 0.63821312 0.3971053 0.64991824</code></pre>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 0.3329554 0.3007198 0.2985455
+## [2,] 0.4056603 0.1081235 0.6020097
+## [3,] 0.7640859 0.9041270 0.7644274
+## [4,] 0.4694568 0.3863779 0.3150178
+## [5,] 0.5848791 0.1608843 0.7592578</code></pre>
 <p>After obtaining the original p-value and knockoffs p-values for each gene, we perform the knockoff filter for multiple testing and computes the q-values for each gene. Genes with Q-value&lt;FDR target level (e.g. 0.1) are significant. This function takes the results from the previous GeneScan3D.KnockoffGeneration() function and get knockoff statistics and q-values.</p>
 <p>We show an example with original and knockoff p-values for 100 genes, and conduct knockoff filter for multiple testing and compute q-values for 100 genes.</p>
 <pre class="r"><code>data(GeneScan3DKnock.example)
@@ -524,7 +526,7 @@ result.GeneScan3DKnock$Qvalue #Q-values</code></pre>
 ##  [81] 1.057143 1.000000 1.000000 1.000000 1.000000 1.057143 1.000000 1.000000
 ##  [89] 1.000000 1.000000 1.000000 1.000000 1.228571 1.000000 1.000000 1.000000
 ##  [97] 1.000000 1.057143 1.000000 1.000000</code></pre>
-<pre class="r"><code>result.GeneScan3DKnock$gene_sign</code></pre>
+<pre class="r"><code>result.GeneScan3DKnock$gene_sign #no significant gene in this example</code></pre>
 <pre><code>## character(0)</code></pre>
 </div>
 
