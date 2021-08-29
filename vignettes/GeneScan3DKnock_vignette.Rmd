@@ -19,7 +19,7 @@ output:
 ---
 title: "GeneScan3DKnock"
 author: "Shiyang Ma"
-date: "8/27/2021"
+date: "8/29/2021"
 output: rmarkdown::html_vignette
 vignette: >
  %\VignetteEngine{knitr::rmarkdown}
@@ -89,7 +89,7 @@ result.GeneScan3D$GeneScan3D.Cauchy.pvalue
 
 Then we conduct GeneScan3D AR Knockoff Generation by generate multiple knockoffs for the gene buffer region and each enhancer based on an auto-regressive model. We provide genotypes of plus and minus 10 Kb surrounding regions for the 15 Kb gene buffer region and two 2 Kb enhancers separately. The knockoff generation include the surrounding regions for LD structure. In real data analyses, the surrounding regions can increase to plus and minus 100 Kb.
 
-The function computes p-values from the GeneScan3D test for the original genotype data, and each of the M=5 multiple knockoff replicates.
+The function computes p-values from the GeneScan3D test for the original genotype data, and each of the M=5 multiple knockoff replicates. The knockoff generations are optimized using shrinkage leveraging algorithm.
 
 ```{r Knockoff Generation, include=T,message=F,error=F,warning=F}
 data(KnockoffGeneration.example)

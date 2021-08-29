@@ -374,7 +374,7 @@ summary {
 
 <h1 class="title toc-ignore">GeneScan3DKnock</h1>
 <h4 class="author">Shiyang Ma</h4>
-<h4 class="date">8/27/2021</h4>
+<h4 class="date">8/29/2021</h4>
 
 </div>
 
@@ -445,7 +445,7 @@ result.GeneScan3D=GeneScan3D(G=G_gene_buffer,Z=Z_gene_buffer,
 result.GeneScan3D$GeneScan3D.Cauchy.pvalue</code></pre>
 <pre><code>## [1] 0.1958497 0.1421710 0.2318639</code></pre>
 <p>Then we conduct GeneScan3D AR Knockoff Generation by generate multiple knockoffs for the gene buffer region and each enhancer based on an auto-regressive model. We provide genotypes of plus and minus 10 Kb surrounding regions for the 15 Kb gene buffer region and two 2 Kb enhancers separately. The knockoff generation include the surrounding regions for LD structure. In real data analyses, the surrounding regions can increase to plus and minus 100 Kb.</p>
-<p>The function computes p-values from the GeneScan3D test for the original genotype data, and each of the M=5 multiple knockoff replicates.</p>
+<p>The function computes p-values from the GeneScan3D test for the original genotype data, and each of the M=5 multiple knockoff replicates. The knockoff generations are optimized using shrinkage leveraging algorithm.</p>
 <pre class="r"><code>data(KnockoffGeneration.example)
 Y=KnockoffGeneration.example$Y; X=KnockoffGeneration.example$X; 
 
@@ -494,12 +494,12 @@ result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy  </code></pre>
 <pre><code>## [1] 0.1958497 0.1421710 0.2318639</code></pre>
 <pre class="r"><code>#p-values for M=5 knockoff genotypes; each row represents one knockoff; for all variants, common variants and rare variants (three columns)
 result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy_knockoff</code></pre>
-<pre><code>##           [,1]      [,2]      [,3]
-## [1,] 0.3329554 0.3007198 0.2985455
-## [2,] 0.4056603 0.1081235 0.6020097
-## [3,] 0.7640859 0.9041270 0.7644274
-## [4,] 0.4694568 0.3863779 0.3150178
-## [5,] 0.5848791 0.1608843 0.7592578</code></pre>
+<pre><code>##            [,1]       [,2]      [,3]
+## [1,] 0.04255452 0.01338780 0.3909937
+## [2,] 0.37325884 0.05463485 0.8874080
+## [3,] 0.58348929 0.39935755 0.4512472
+## [4,] 0.40880929 0.20615300 0.3325431
+## [5,] 0.68180554 0.75913688 0.5738901</code></pre>
 <p>After obtaining the original p-value and knockoffs p-values for each gene, we perform the knockoff filter for multiple testing and computes the q-values for each gene. Genes with Q-value&lt;FDR target level (e.g. 0.1) are significant. This function takes the results from the previous GeneScan3D.KnockoffGeneration() function and get knockoff statistics and q-values.</p>
 <p>We show an example with original and knockoff p-values for 100 genes, and conduct knockoff filter for multiple testing and compute q-values for 100 genes.</p>
 <pre class="r"><code>data(GeneScan3DKnock.example)
