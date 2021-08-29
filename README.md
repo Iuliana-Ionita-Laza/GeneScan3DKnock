@@ -37,12 +37,12 @@ using the **GeneScan3DKnock** [Github repository](https://github.com/Iuliana-Ion
 ## Version history
 The current version is Version 0.3.
 
-Version 0.3 (Resampling option in functions can be false. Don't need to conduct resampling-based moment-matching when the sample size is large, especially for UK biobank-scale data; Add W.threshold in the GeneScan3DKnock() function; Apply SPA gene-based test for binary traits, to deal with imbalance case-control issues.)
+Version 0.3 (Resampling option in functions can be false. Don't need to conduct resampling-based moment-matching when the sample size is large, especially for UK biobank-scale data; Add W.threshold in the GeneScan3DKnock() function; Apply SPA gene-based test for binary traits, to deal with imbalance case-control issues; The knockoff generations are optimized using shrinkage leveraging algorithm.)
 
 ## Citation
 The GeneScan3DKnock pre-print: Ma, S., Dalgleish, J. L ., Lee, J., Wang, C., Liu, L., Gill, R., Buxbaum, J. D., Chung, W., Aschard, H., Silverman, E. K., Cho, M. H., He, Z. and Ionita-Laza, I. "Powerful gene-based testing by integrating long-range chromatin interactions and knockoff genotypes". medRxiv 2021.07.14.21260405 (2021). doi: 10.1101/2021.07.14.21260405
 
-The KnockoffScreen-AL pre-print: He, Z.\*, Guen, Y. L.\*, Liu, L., Lee, J., Ma, S., Yang, A. C., Liu. X., Rutledge, J., Losada, P. M., Song, B., Butler, R., Longo, F., Tang, H., Mormino, E., Wyss-Coray, T., Greicius, M. and Ionita-Laza, I. Genome-wide analysis of common and rare variants via multiple knockoffs at biobank-scale: methods and applications (2021).
+The KnockoffScreen-AL (shrinkage algorithmic leveraging) pre-print: He, Z.\*, Guen, Y. L.\*, Liu, L., Lee, J., Ma, S., Yang, A. C., Liu. X., Rutledge, J., Losada, P. M., Song, B., Butler, R., Longo, F., Tang, H., Mormino, E., Wyss-Coray, T., Greicius, M. and Ionita-Laza, I. Genome-wide analysis of common and rare variants via multiple knockoffs at biobank-scale: methods and applications (2021).
 
 ## License
 This software is licensed under GPL-3.
