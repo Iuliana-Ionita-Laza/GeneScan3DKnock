@@ -14,7 +14,7 @@ To deal with the case-control imbalance issue for binary traits, we apply the Sa
 R (recommended version >= 3.5.0)
 
 ## Dependencies
-GeneScan3DKnock depends on R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm, KnockoffScreen and abind. Make sure to install those packages before installing GeneScan3DKnock.
+GeneScan3DKnock depends on R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm, KnockoffScreen, abind and irlba. Make sure to install those packages before installing GeneScan3DKnock.
     
 ## Installation
 library(devtools) 
