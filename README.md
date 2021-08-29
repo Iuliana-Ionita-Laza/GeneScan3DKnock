@@ -16,7 +16,7 @@ Besides, we also optimize the knockoff generations for GeneScan3DKnock using Shr
 R (recommended version >= 3.6.0)
 
 ## Dependencies
-GeneScan3DKnock depends on R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm, KnockoffScreen, abind and irlba. Make sure to install those packages before installing GeneScan3DKnock.
+GeneScan3DKnock depends on R packages SKAT, Matrix, MASS, WGScan, SPAtest, CompQuadForm, abind and irlba. Make sure to install those packages before installing GeneScan3DKnock.
     
 ## Installation
 library(devtools) 
