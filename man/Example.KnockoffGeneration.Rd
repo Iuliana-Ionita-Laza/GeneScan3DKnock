@@ -15,7 +15,7 @@ data("KnockoffGeneration.example")
 This simulated example dataset contains outcome variable Y, covariate X, genotype matrices and genetic variants of surrounding regions for gene buffer and two enhancers separately, positions and functional annotations for gene buffer region, promoter and two enhancers.
 }
 \details{
-We provide genotypes of 20 Kb surrounding regions for 15 Kb gene buffer region and two 2 Kb enhancers separately. In real data analyses, the surrounding regions can increase to 200 Kb for knockoff generation.
+We provide genotypes of +-10 Kb neighborhoods for gene buffer region and two enhancers separately. In real data analyses, the neighborhood for knockoff generation should be increase to +-100 Kb.
 }
 \examples{
 data("KnockoffGeneration.example")
@@ -29,23 +29,14 @@ variants_Enhancer1_surround=KnockoffGeneration.example$variants_Enhancer1_surrou
 G_Enhancer2_surround=KnockoffGeneration.example$G_Enhancer2_surround
 variants_Enhancer2_surround=KnockoffGeneration.example$variants_Enhancer2_surround
 
-G_EnhancerAll_surround=cbind(G_Enhancer1_surround,G_Enhancer2_surround)
-variants_EnhancerAll_surround=c(variants_Enhancer1_surround,variants_Enhancer2_surround)
-p_EnhancerAll_surround=c(length(variants_Enhancer1_surround),length(variants_Enhancer2_surround))
-
 gene_buffer.pos=KnockoffGeneration.example$gene_buffer.pos
 promoter.pos=KnockoffGeneration.example$promoter.pos
 Enhancer1.pos=KnockoffGeneration.example$Enhancer1.pos
 Enhancer2.pos=KnockoffGeneration.example$Enhancer2.pos   
-Enhancer.pos=rbind(Enhancer1.pos,Enhancer2.pos)
 
 Z_gene_buffer=KnockoffGeneration.example$Z_gene_buffer
 Z_promoter=KnockoffGeneration.example$Z_promoter
 Z_Enhancer1=KnockoffGeneration.example$Z_Enhancer1
 Z_Enhancer2=KnockoffGeneration.example$Z_Enhancer2
-Z_EnhancerAll=rbind(Z_Enhancer1,Z_Enhancer2)
-p_EnhancerAll=c(dim(Z_Enhancer1)[1],dim(Z_Enhancer2)[1])
-
-R=KnockoffGeneration.example$R
 }
 \keyword{data}

@@ -9,7 +9,7 @@ GeneScan3D.KnockoffGeneration(
   variants_gene_buffer_surround = variants_gene_buffer_surround,
   gene_buffer.pos = gene_buffer.pos,
   promoter.pos = promoter.pos,
-  R = R,
+  R = 2,
   G_EnhancerAll_surround = G_EnhancerAll_surround,
   variants_EnhancerAll_surround = variants_EnhancerAll_surround,
   p_EnhancerAll_surround = p_EnhancerAll_surround,
@@ -55,7 +55,7 @@ GeneScan3D.KnockoffGeneration(
 
 \item{window.size}{The 1-D window sizes in base pairs to scan the gene buffer region. The recommended window sizes are c(1000,5000,10000).}
 
-\item{MAC.threshold}{Threshold for minor allele count. Variants below MAC.threshold are ultra-rare variants. The recommended level is 5.}
+\item{MAC.threshold}{Threshold for minor allele count. Variants below MAC.threshold are ultra-rare variants. The recommended level is 10.}
 
 \item{MAF.threshold}{Threshold for minor allele frequency. Variants below MAF.threshold are rare variants. The recommended level is 0.01.}
 
@@ -71,7 +71,7 @@ GeneScan3D.KnockoffGeneration(
 \item{GeneScan3D.Cauchy_knockoff}{A M by 3 GeneScan3D p-values matrix of all, common and rare variants for M knockoff genotypes.}
 }
 \description{
-This function generates multiple knockoff genotypes for a gene and the corresponding regulatory elements based on an auto-regressive model.  Additionally, it computes p-values from the GeneScan3D test for a gene based on the original data, and each of the knockoff replicates.
+This function generates multiple knockoff genotypes for a gene and the corresponding regulatory elements based on an auto-regressive model.  Additionally, it computes p-values from the GeneScan3D test for a gene based on the original data, and each of the knockoff replicates. The knockoff generations are optimized using shrinkage leveraging algorithm.
 }
 \examples{
 library(GeneScan3DKnock)
@@ -85,24 +85,22 @@ variants_Enhancer1_surround=KnockoffGeneration.example$variants_Enhancer1_surrou
 G_Enhancer2_surround=KnockoffGeneration.example$G_Enhancer2_surround
 variants_Enhancer2_surround=KnockoffGeneration.example$variants_Enhancer2_surround
 
-G_EnhancerAll_surround=cbind(G_Enhancer1_surround,G_Enhancer2_surround)
-variants_EnhancerAll_surround=c(variants_Enhancer1_surround,variants_Enhancer2_surround)
-p_EnhancerAll_surround=c(length(variants_Enhancer1_surround),length(variants_Enhancer2_surround))
-
 gene_buffer.pos=KnockoffGeneration.example$gene_buffer.pos
 promoter.pos=KnockoffGeneration.example$promoter.pos
 Enhancer1.pos=KnockoffGeneration.example$Enhancer1.pos
 Enhancer2.pos=KnockoffGeneration.example$Enhancer2.pos   
-Enhancer.pos=rbind(Enhancer1.pos,Enhancer2.pos)
 
 Z_gene_buffer=KnockoffGeneration.example$Z_gene_buffer
 Z_promoter=KnockoffGeneration.example$Z_promoter
 Z_Enhancer1=KnockoffGeneration.example$Z_Enhancer1
 Z_Enhancer2=KnockoffGeneration.example$Z_Enhancer2
-Z_EnhancerAll=rbind(Z_Enhancer1,Z_Enhancer2)
-p_EnhancerAll=c(dim(Z_Enhancer1)[1],dim(Z_Enhancer2)[1])
 
-R=KnockoffGeneration.example$R
+G_EnhancerAll_surround=cbind(G_Enhancer1_surround,G_Enhancer2_surround)
+variants_EnhancerAll_surround=c(variants_Enhancer1_surround,variants_Enhancer2_surround)
+p_EnhancerAll_surround=c(length(variants_Enhancer1_surround),length(variants_Enhancer2_surround))
+Enhancer.pos=rbind(Enhancer1.pos,Enhancer2.pos)
+p_EnhancerAll=c(dim(Z_Enhancer1)[1],dim(Z_Enhancer2)[1])
+Z_EnhancerAll=rbind(Z_Enhancer1,Z_Enhancer2)
 
 set.seed(12345)
 result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
@@ -110,14 +108,23 @@ result.null.model=GeneScan.Null.Model(Y, X, out_type="C", B=1000)
 result.GeneScan3D.KnockoffGeneration=GeneScan3D.KnockoffGeneration(
 G_gene_buffer_surround=G_gene_buffer_surround,
 variants_gene_buffer_surround=variants_gene_buffer_surround,
-gene_buffer.pos=gene_buffer.pos,promoter.pos=promoter.pos,R=R, 
+gene_buffer.pos=gene_buffer.pos,
+promoter.pos=promoter.pos,
+R=2, 
 G_EnhancerAll_surround=G_EnhancerAll_surround, 
 variants_EnhancerAll_surround=variants_EnhancerAll_surround,
 p_EnhancerAll_surround=p_EnhancerAll_surround,
-Enhancer.pos=Enhancer.pos,p.EnhancerAll=p_EnhancerAll,
-Z=Z_gene_buffer,Z.promoter=Z_promoter,Z.EnhancerAll=Z_EnhancerAll, 
+Enhancer.pos=Enhancer.pos,
+p.EnhancerAll=p_EnhancerAll,
+Z=Z_gene_buffer,
+Z.promoter=Z_promoter,
+Z.EnhancerAll=Z_EnhancerAll,
 window.size=c(1000,5000,10000),
-MAC.threshold=5,MAF.threshold=0.01,Gsub.id=NULL,result.null.model=result.null.model,M=5)
+MAC.threshold=10,
+MAF.threshold=0.01,
+Gsub.id=NULL,
+result.null.model=result.null.model,
+M=5)
 result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy 
 result.GeneScan3D.KnockoffGeneration$GeneScan3D.Cauchy_knockoff
 }

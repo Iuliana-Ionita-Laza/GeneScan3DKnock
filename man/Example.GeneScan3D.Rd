@@ -6,7 +6,7 @@
 \alias{GeneScan3D.example}
 \title{Data example for GeneScan3D (gene-based testing by integrating long-range chromatin interactions).}
 \format{
-An object of class \code{list} of length 13.
+An object of class \code{list} of length 12.
 }
 \usage{
 data("GeneScan3D.example")
