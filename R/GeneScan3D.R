@@ -1,8 +1,5 @@
 #' @importFrom stats binomial dbeta gaussian glm pcauchy pchisq rbinom sd var median
-utils::globalVariables(c('G_Enhancer1_surround','G_Enhancer2_surround','variants_Enhancer1_surround',
-                         'variants_Enhancer2_surround','Enhancer1.pos','Enhancer2.pos',
-                         'G_EnhancerAll','Z_EnhancerAll','p_EnhancerAll',"G_gene_buffer", "Z_gene_buffer", 
-"pos_gene_buffer",'n','G_promoter','Z_promoter','G_Enhancer1','Z_Enhancer1','G_Enhancer2','Z_Enhancer2','qchisq'))
+utils::globalVariables(c('G_Enhancer1_surround','G_Enhancer2_surround','variants_Enhancer1_surround','variants_Enhancer2_surround','Enhancer1.pos','Enhancer2.pos','G_EnhancerAll','Z_EnhancerAll','p_EnhancerAll',"G_gene_buffer", "Z_gene_buffer", "pos_gene_buffer",'n','G_promoter','Z_promoter','G_Enhancer1','Z_Enhancer1','G_Enhancer2','Z_Enhancer2','qchisq'))
 
 #' Data example for GeneScan3D (gene-based testing by integrating long-range chromatin interactions).
 #'
@@ -285,8 +282,6 @@ GeneScan1D<-function(G=G_gene_buffer,Z=NULL,window.size=c(1000,5000,10000), pos=
             }
          } 
       }
-      
-      
       #SKAT test
       p.dispersion<-matrix(NA,1,ncol(weight.matrix))
       score<-as.vector(S)[index.window]
@@ -294,7 +289,7 @@ GeneScan1D<-function(G=G_gene_buffer,Z=NULL,window.size=c(1000,5000,10000), pos=
          re.score<-t(t(G.window)%*%re.Y.res) #resampling for 1000 times
          for (j in 1:ncol(weight.matrix)){
             #For extremely rare variants, do not conduct SKAT
-            p.dispersion[,j]<-Get.p.SKAT(score,re.score,K,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j],result.null.model) 
+            p.dispersion[,j]<-Get.p.SKAT(score,re.score,K,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j]) 
          }  
       }else{
          #For extremely rare variants, do not conduct SKAT, change MAC.threshold to 10, do not apply resampling-based moment matching
@@ -303,10 +298,10 @@ GeneScan1D<-function(G=G_gene_buffer,Z=NULL,window.size=c(1000,5000,10000), pos=
             if (sum(weight.matrix[,j]!=0)>1){ #only conduct SKAT test for at least 1 variants
                if(outcome=='D'){ 
                   #binary
-                  p.dispersion[,j]<-Get.p.SKAT_noMA(score,K=K_tilde,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j],result.null.model)
+                  p.dispersion[,j]<-Get.p.SKAT_noMA(score,K=K_tilde,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j])
                }else{ 
                   #continuous
-                  p.dispersion[,j]<-Get.p.SKAT_noMA(score,K=K,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j],result.null.model) 
+                  p.dispersion[,j]<-Get.p.SKAT_noMA(score,K=K,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j]) 
                }
             }
          }
@@ -565,7 +560,7 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
          re.score<-t(t(G.window)%*%re.Y.res) #resampling for 1000 times
          for (j in 1:ncol(weight.matrix)){
             #For extremely rare variants, do not conduct SKAT
-            p.dispersion[,j]<-Get.p.SKAT(score,re.score,K,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j],result.null.model) 
+            p.dispersion[,j]<-Get.p.SKAT(score,re.score,K,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j]) 
          }  
       }else{
          #For extremely rare variants, do not conduct SKAT, change MAC.threshold to 10, do not apply resampling-based moment matching
@@ -574,10 +569,10 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
             if (sum(weight.matrix[,j]!=0)>1){ #only conduct SKAT test for at least 1 variants
                if(outcome=='D'){ 
                   #binary
-                  p.dispersion[,j]<-Get.p.SKAT_noMA(score,K=K_tilde,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j],result.null.model)
+                  p.dispersion[,j]<-Get.p.SKAT_noMA(score,K=K_tilde,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j])
                }else{ 
                   #continuous
-                  p.dispersion[,j]<-Get.p.SKAT_noMA(score,K=K,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j],result.null.model) 
+                  p.dispersion[,j]<-Get.p.SKAT_noMA(score,K=K,window.matrix=as.matrix(rep(1,sum(index.window))),weight=(MAC.window>=MAC.threshold)*weight.matrix[,j]) 
                }
             }
          }
@@ -703,7 +698,7 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
             re.score<-t(t(G.window.promoter)%*%re.Y.res) #resampling for 1000 times
             for (j in 1:ncol(weight.matrix)){
                #For extremely rare variants, do not conduct SKAT
-               p.dispersion.promoter[,j]<-Get.p.SKAT(score,re.score,K,window.matrix=as.matrix(rep(1,dim(G.window.promoter)[2])),weight=(MAC.window.promoter>=MAC.threshold)*weight.matrix[,j],result.null.model) 
+               p.dispersion.promoter[,j]<-Get.p.SKAT(score,re.score,K,window.matrix=as.matrix(rep(1,dim(G.window.promoter)[2])),weight=(MAC.window.promoter>=MAC.threshold)*weight.matrix[,j]) 
             }  
          }else{
             #For extremely rare variants, do not conduct SKAT, change MAC.threshold to 10, do not apply resampling-based moment matching
@@ -712,10 +707,10 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
                if (sum(weight.matrix[,j]!=0)>1){ #only conduct SKAT test for at least 1 variants
                   if(outcome=='D'){ 
                      #binary
-                     p.dispersion.promoter[,j]<-Get.p.SKAT_noMA(score,K=K_tilde,window.matrix=as.matrix(rep(1,dim(G.window.promoter)[2])),weight=(MAC.window.promoter>=MAC.threshold)*weight.matrix[,j],result.null.model)
+                     p.dispersion.promoter[,j]<-Get.p.SKAT_noMA(score,K=K_tilde,window.matrix=as.matrix(rep(1,dim(G.window.promoter)[2])),weight=(MAC.window.promoter>=MAC.threshold)*weight.matrix[,j])
                   }else{ 
                      #continuous
-                     p.dispersion.promoter[,j]<-Get.p.SKAT_noMA(score,K=K,window.matrix=as.matrix(rep(1,dim(G.window.promoter)[2])),weight=(MAC.window.promoter>=MAC.threshold)*weight.matrix[,j],result.null.model) 
+                     p.dispersion.promoter[,j]<-Get.p.SKAT_noMA(score,K=K,window.matrix=as.matrix(rep(1,dim(G.window.promoter)[2])),weight=(MAC.window.promoter>=MAC.threshold)*weight.matrix[,j]) 
                   }
                }
             }
@@ -856,7 +851,7 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
                re.score<-t(t(G.window.Enhancer)%*%re.Y.res) #resampling for 1000 times
                for (j in 1:ncol(weight.matrix)){
                   #For extremely rare variants, do not conduct SKAT
-                  p.dispersion.Enhancer[,j]<-Get.p.SKAT(score,re.score,K,window.matrix=as.matrix(rep(1,dim(G.window.Enhancer)[2])),weight=(MAC.window.Enhancer>=MAC.threshold)*weight.matrix[,j],result.null.model) 
+                  p.dispersion.Enhancer[,j]<-Get.p.SKAT(score,re.score,K,window.matrix=as.matrix(rep(1,dim(G.window.Enhancer)[2])),weight=(MAC.window.Enhancer>=MAC.threshold)*weight.matrix[,j]) 
                }  
             }else{
                #For extremely rare variants, do not conduct SKAT, change MAC.threshold to 10, do not apply resampling-based moment matching
@@ -865,10 +860,10 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
                   if (sum(weight.matrix[,j]!=0)>1){ #only conduct SKAT test for at least 1 variants
                      if(outcome=='D'){ 
                         #binary
-                        p.dispersion.Enhancer[,j]<-Get.p.SKAT_noMA(score,K=K_tilde,window.matrix=as.matrix(rep(1,dim(G.window.Enhancer)[2])),weight=(MAC.window.Enhancer>=MAC.threshold)*weight.matrix[,j],result.null.model)
+                        p.dispersion.Enhancer[,j]<-Get.p.SKAT_noMA(score,K=K_tilde,window.matrix=as.matrix(rep(1,dim(G.window.Enhancer)[2])),weight=(MAC.window.Enhancer>=MAC.threshold)*weight.matrix[,j])
                      }else{ 
                         #continuous
-                        p.dispersion.Enhancer[,j]<-Get.p.SKAT_noMA(score,K=K,window.matrix=as.matrix(rep(1,dim(G.window.Enhancer)[2])),weight=(MAC.window.Enhancer>=MAC.threshold)*weight.matrix[,j],result.null.model) 
+                        p.dispersion.Enhancer[,j]<-Get.p.SKAT_noMA(score,K=K,window.matrix=as.matrix(rep(1,dim(G.window.Enhancer)[2])),weight=(MAC.window.Enhancer>=MAC.threshold)*weight.matrix[,j]) 
                      }
                   }
                }
@@ -937,11 +932,10 @@ GeneScan3D<-function(G=G_gene_buffer,Z=Z_gene_buffer,G.promoter=G_promoter,Z.pro
       RE_minp.rare=unique(RE.indicator[which(GeneScan3D.Cauchy.RE[,3]==min(GeneScan3D.Cauchy.RE[,3],na.rm=TRUE))])
    }
    
-   return(list(GeneScan3D.Cauchy.pvalue=GeneScan3D.Cauchy,M=M_gene_buffer,#R=sum(Enhancer_ind),
+   return(list(GeneScan3D.Cauchy.pvalue=GeneScan3D.Cauchy,M=M_gene_buffer,
                minp=c(min(GeneScan3D.Cauchy.RE[,1],na.rm=TRUE),min(GeneScan3D.Cauchy.RE[,2],na.rm=TRUE),min(GeneScan3D.Cauchy.RE[,3],na.rm=TRUE)),
                RE_minp=c(RE_minp.all,RE_minp.common,RE_minp.rare)))
 }
-
 
 ######### Other functions #########
 ### p-values calculation
@@ -959,11 +953,8 @@ Get.p<-function(X,result.null.model){
    }
    return(as.matrix(p))
 }
-Get.p.SKAT_noMA<-function(score,K,window.matrix,weight,result.null.model){
-   
-   mu<-result.null.model$nullglm$fitted.values;Y.res<-result.null.model$Y-mu
-   X0<-result.null.model$X0;outcome<-result.null.model$out_type
-   
+Get.p.SKAT_noMA<-function(score,K,window.matrix,weight){
+
    Q<-as.vector(t(score^2)%*%(weight*window.matrix)^2) #SKAT statistics
    K.temp<-weight*t(weight*K)
    
@@ -996,11 +987,8 @@ Get.p.moment<-function(Q,re.Q){ #Q a A*q matrix of test statistics, re.Q a B*q m
    re.p<-t(pchisq((t(Q)-re.mean)*sqrt(2*re.df)/sqrt(re.variance)+re.df,re.df,lower.tail=F))
    return(re.p)
 }
-Get.p.SKAT<-function(score,re.score,K,window.matrix,weight,result.null.model){
-   
-   mu<-result.null.model$nullglm$fitted.values;Y.res<-result.null.model$Y-mu
-   X0<-result.null.model$X0;outcome<-result.null.model$out_type
-   
+Get.p.SKAT<-function(score,re.score,K,window.matrix,weight){
+  
    Q<-as.vector(t(score^2)%*%(weight*window.matrix)^2) #SKAT statistics
    K.temp<-weight*t(weight*K)
    
