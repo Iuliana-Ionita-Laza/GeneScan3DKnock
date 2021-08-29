@@ -5,7 +5,9 @@ This is an R package for performing improved gene-based testing by integrating l
 ## Description
 The package contain functions for the gene-based association tests (GeneScan3D) that integrate both common and rare genetic variation from promoter and enhancers for each gene, along with the knockoff-enhanced tests. The GeneScan3DKnock has two steps: Step 1. Knockoff generation using function GeneScan3D.KnockoffGeneration() and Step 2. Knockoff filter using function GeneScan3DKnock(), after obtaining the original and knockoff p-values for each gene. 
 
-To deal with the case-control imbalance issue for binary traits, we apply the Saddlepoint approximation (SPA) of the gene-based tests to avoid the inflation of Type I error rate.
+To deal with the case-control imbalance issue for binary traits, we apply the Saddlepoint approximation (SPA) of the gene-based tests to avoid the inflation of Type I error rate. 
+
+Besides, we also optimize the knockoff generations for GeneScan3DKnock using Shrinkage leveraging (SL) algorithm. After the optimization, knockoffs generation of whole-genome UK biobank genotypes only take 11 CPU hours for 1,000 computational cores.
 
 ## Workflow
 ![Workflow](https://user-images.githubusercontent.com/57265092/99107266-8c690a80-25b3-11eb-8fe1-ceb388bffa38.jpg)
