@@ -10,7 +10,7 @@ To deal with the case-control imbalance issue for binary traits, we apply the Sa
 Besides, we also optimize the knockoff generations for GeneScan3DKnock using Shrinkage leveraging (SL) algorithm. After the optimization, knockoffs generation of whole-genome UK biobank genotypes only take 11 CPU hours for 1,000 computational cores.
 
 ## Workflow
-![Workflow](https://user-images.githubusercontent.com/57265092/99107266-8c690a80-25b3-11eb-8fe1-ceb388bffa38.jpg)
+![Workflow](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/Workflow.jpg)
 
 ## Prerequisites
 R (recommended version >= 3.6.0)
