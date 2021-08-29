@@ -35,7 +35,7 @@ If you want to submit a issue concerning the software please do so
 using the **GeneScan3DKnock** [Github repository](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/issues).
 
 ## Version history
-The current version is Version 0.3.
+The current version is 0.3 (August 29, 2021).
 
 Version 0.3 (Resampling option in functions can be false. Don't need to conduct resampling-based moment-matching when the sample size is large, especially for UK biobank-scale data; Add W.threshold in the GeneScan3DKnock() function; Apply SPA gene-based test for binary traits, to deal with imbalance case-control issues; The knockoff generations are optimized using shrinkage leveraging algorithm.)
 
