@@ -24,6 +24,8 @@ library(devtools)
 
 devtools::install_github("Iuliana-Ionita-Laza/GeneScan3DKnock")
 
+The current version is 0.3 (August 29, 2021).
+
 ## Usage
 Please see the GeneScan3DKnock <a href="https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/docs/GeneScan3DKnock_0.3.pdf"> **user manual** </a> for detailed usage of GeneScan3DKnock package. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/docs/GeneScan3DKnock_vignette.html">**tutorial**</a> of using the GeneScan3DKnock package.
 
@@ -32,12 +34,9 @@ If you have any questions about GeneScan3DKnock please contact
 
 - <sm4857@cumc.columbia.edu>
 
-If you want to submit a issue concerning the software please do so
-using the **GeneScan3DKnock** [Github repository](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/issues).
+If you want to submit a issue concerning the software please do so using the **GeneScan3DKnock** [Github repository](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/issues).
 
 ## Version history
-The current version is 0.3 (August 29, 2021).
-
 Version 0.3 (Resampling option in functions can be false. Don't need to conduct resampling-based moment-matching when the sample size is large, especially for UK biobank-scale data; Add W.threshold in the GeneScan3DKnock() function; Apply SPA gene-based test for binary traits, to deal with imbalance case-control issues; The knockoff generations are optimized using shrinkage leveraging algorithm.)
 
 ## Citation
