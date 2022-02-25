@@ -26,8 +26,16 @@ devtools::install_github("Iuliana-Ionita-Laza/GeneScan3DKnock")
 
 The current version is 0.3 (August 29, 2021).
 
+## Version history
+Version 0.3 (Add an option of resampling in GeneScan1D and GeneScan3D functions. Don't need to conduct resampling-based moment-matching when the sample size is large, especially for UK biobank-scale data; Add W.threshold in the GeneScan3DKnock function; Apply SPA gene-based test for binary traits, to deal with imbalance case-control issues; The knockoff generations are optimized using shrinkage leveraging algorithm.)
+
 ## Usage
 Please see the GeneScan3DKnock <a href="https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/docs/GeneScan3DKnock_0.3.pdf"> **user manual** </a> for detailed usage of GeneScan3DKnock package. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/blob/master/docs/GeneScan3DKnock_vignette.html">**tutorial**</a> of using the GeneScan3DKnock package.
+
+## Functional annotation scores
+For functional annotation scores, we use the genome-wide functional annotations in 127 different cell types and tissues ([GenoNet scores](https://www.nature.com/articles/s41467-018-07349-w)). The precomputed GenoNet scores for human genome assembly GRCh37 (hg19) can be [downloaded here](https://zenodo.org/record/3336209#.YhkNI-iZOUk).
+
+The functional annotation scores can help to increase the power of the gene-based test, but this is not mandatory. If one don't want to use any functional score, just let Z=NULL, and the package would automatically use the Beta(MAF;1,25) for rare variants and Beta(MAF;1,1) for common variants as the weights.
 
 ## Contact
 If you have any questions about GeneScan3DKnock please contact
@@ -35,9 +43,6 @@ If you have any questions about GeneScan3DKnock please contact
 - <sm4857@cumc.columbia.edu>
 
 If you want to submit a issue concerning the software please do so using the **GeneScan3DKnock** [Github repository](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/issues).
-
-## Version history
-Version 0.3 (Add an option of resampling in GeneScan1D and GeneScan3D functions. Don't need to conduct resampling-based moment-matching when the sample size is large, especially for UK biobank-scale data; Add W.threshold in the GeneScan3DKnock function; Apply SPA gene-based test for binary traits, to deal with imbalance case-control issues; The knockoff generations are optimized using shrinkage leveraging algorithm.)
 
 ## Citation
 * The GeneScan3DKnock paper: Ma, S., Dalgleish, J., Lee, J., Wang, C., Liu, L., Gill, R., Buxbaum, J. D., Chung, W. K., Aschard, H., Silverman, E. K., Cho, M. H., He, Z. and Ionita-Laza, I. (2021). ["Powerful gene-based testing by integrating long-range chromatin interactions and knockoff genotypes".](https://doi.org/10.1073/pnas.2105191118) _Proceedings of the National Academy of Sciences of the United States of America_, **118**, e2105191118.
@@ -47,8 +52,3 @@ Version 0.3 (Add an option of resampling in GeneScan1D and GeneScan3D functions.
 
 ## License
 This software is licensed under GPL-3.
-
-## Functional annotation scores
-For functional annotation scores, we use the genome-wide functional annotations in 127 different cell types and tissues ([GenoNet scores](https://www.nature.com/articles/s41467-018-07349-w)). The precomputed GenoNet scores for human genome assembly GRCh37 (hg19) can be [downloaded here](https://zenodo.org/record/3336209#.YhkNI-iZOUk).
-
-The functional annotation scores can help to increase the power of the gene-based test, but this is not mandatory. If one don't want to use any functional score, just let Z=NULL, and the package would automatically use the Beta(MAF;1,25) for rare variants and Beta(MAF;1,1) for common variants as the weights.
