@@ -37,7 +37,7 @@ If you have any questions about GeneScan3DKnock please contact
 If you want to submit a issue concerning the software please do so using the **GeneScan3DKnock** [Github repository](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/issues).
 
 ## Version history
-Version 0.3 (Resampling option in functions can be false. Don't need to conduct resampling-based moment-matching when the sample size is large, especially for UK biobank-scale data; Add W.threshold in the GeneScan3DKnock() function; Apply SPA gene-based test for binary traits, to deal with imbalance case-control issues; The knockoff generations are optimized using shrinkage leveraging algorithm.)
+Version 0.3 (Add an option of resampling in functions. Don't need to conduct resampling-based moment-matching when the sample size is large, especially for UK biobank-scale data; Add W.threshold in the GeneScan3DKnock() function; Apply SPA gene-based test for binary traits, to deal with imbalance case-control issues; The knockoff generations are optimized using shrinkage leveraging algorithm.)
 
 ## Citation
 * The GeneScan3DKnock paper: Ma, S., Dalgleish, J., Lee, J., Wang, C., Liu, L., Gill, R., Buxbaum, J. D., Chung, W. K., Aschard, H., Silverman, E. K., Cho, M. H., He, Z. and Ionita-Laza, I. (2021). ["Powerful gene-based testing by integrating long-range chromatin interactions and knockoff genotypes".](https://doi.org/10.1073/pnas.2105191118) _Proceedings of the National Academy of Sciences of the United States of America_, **118**, e2105191118.
