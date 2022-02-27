@@ -35,7 +35,7 @@ Please see the GeneScan3DKnock <a href="https://github.com/Iuliana-Ionita-Laza/G
 ## Functional annotation scores
 For functional annotation scores, we use the genome-wide functional annotations in 127 different cell types and tissues ([GenoNet scores](https://www.nature.com/articles/s41467-018-07349-w)). The precomputed GenoNet scores for human genome assembly GRCh37 (hg19) can be [downloaded here](https://zenodo.org/record/3336209#.YhkNI-iZOUk).
 
-The functional annotation scores can help to increase the power of the gene-based test, but this is not mandatory. If one don't want to use any functional score, just let Z=NULL, and the package would automatically use the Beta(MAF;1,25) for rare variants and Beta(MAF;1,1) for common variants as the weights.
+The functional annotation scores can help to increase the power of the gene-based test, but this is not mandatory. If one don't want to use any functional score, just set Z=NULL, and the package would automatically use the Beta(MAF;1,25) for rare variants and Beta(MAF;1,1) for common variants as the weights.
 
 ## Contact
 If you have any questions about GeneScan3DKnock please contact
