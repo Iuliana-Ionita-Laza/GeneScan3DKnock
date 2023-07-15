@@ -40,7 +40,7 @@ The functional annotation scores can help to increase the power of the gene-base
 ## Contact
 If you have any questions about GeneScan3DKnock please contact
 
-- <sm4857@cumc.columbia.edu>
+- <mashiyang1991@sjtu.edu.cn>
 
 If you want to submit a issue concerning the software please do so using the **GeneScan3DKnock** [Github repository](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/issues).
 
