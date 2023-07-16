@@ -1,4 +1,3 @@
-[![R-CMD-check](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/workflows/R-CMD-check/badge.svg)](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/actions)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 # GeneScan3DKnock 
 This is an R package for performing improved gene-based testing by integrating long-range chromatin interactions and knockoff statistics.
